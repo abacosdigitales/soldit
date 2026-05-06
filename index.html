@@ -402,6 +402,17 @@ body.admin-mode .admin-active-badge { display:flex; }
       <div class="cat-pill" onclick="filterCat('audio',this)">🎧 AUDIO</div>
       <div class="cat-pill" onclick="filterCat('accesorio',this)">⌨️ ACCESORIOS</div>
       <div class="cat-pill" onclick="filterCat('tablet',this)">📟 TABLETS</div>
+      <div class="cat-pill" onclick="filterCat('camara',this)">📸 CÁMARAS</div>
+      <div class="cat-pill" onclick="filterCat('impresora',this)">🖨️ IMPRESORAS</div>
+      <div class="cat-pill" onclick="filterCat('monitor',this)">🖥️ MONITORES</div>
+      <div class="cat-pill" onclick="filterCat('wearable',this)">⌚ WEARABLES</div>
+      <div class="cat-pill" onclick="filterCat('cable',this)">🔌 CABLES</div>
+      <div class="cat-pill" onclick="filterCat('almacenamiento',this)">💾 ALMACENAMIENTO</div>
+      <div class="cat-pill" onclick="filterCat('periferico',this)">🖱️ PERIFÉRICOS</div>
+      <div class="cat-pill" onclick="filterCat('redes',this)">📡 REDES</div>
+      <div class="cat-pill" onclick="filterCat('bateria',this)">🔋 BATERÍAS</div>
+      <div class="cat-pill" onclick="filterCat('microfono',this)">🎙️ MICRÓFONOS</div>
+      <div class="cat-pill" onclick="filterCat('hardware',this)">🔧 HARDWARE</div>
     </div>
   </div>
 
@@ -431,6 +442,8 @@ body.admin-mode .admin-active-badge { display:flex; }
         <div class="hf-card">📱<span>Smartphones</span></div>
         <div class="hf-card">💻<span>Laptops</span></div>
         <div class="hf-card">🎮<span>Gaming</span></div>
+        <div class="hf-card">📸<span>Cámaras</span></div>
+        <div class="hf-card">🖥️<span>Monitores</span></div>
       </div>
     </div>
   </div>
@@ -628,7 +641,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 const WA_NUMBER = '5491126972862'; // Tu número de WhatsApp
 // ─────────────────────────────────────────────────────────
 
-const catEmoji = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'🎧', accesorio:'⌨️', tablet:'📟' };
+const catEmoji = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'🎧', accesorio:'⌨️', tablet:'📟', camara:'📸', impresora:'🖨️', monitor:'🖥️', wearable:'⌚', cable:'🔌', almacenamiento:'💾', periferico:'🖱️', redes:'📡', bateria:'🔋', microfono:'🎙️', hardware:'🔧' };
 
 let products   = [];
 let cart       = [];
@@ -1349,7 +1362,7 @@ function doLogin() {
     sessionStorage.setItem('soldit_admin', '1');
     document.getElementById('loginOverlay').classList.remove('open');
     applyAdminUI();
-    showToast('✅ BIENVENIDA, ADMINISTRADORA');
+    showToast('🔓 SESIÓN ADMIN ABIERTA');
   } else {
     document.getElementById('loginError').textContent = '⚠ CONTRASEÑA INCORRECTA';
     document.getElementById('loginPass').value = '';
