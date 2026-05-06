@@ -195,7 +195,7 @@ body::before {
 .badge-sold { position:absolute; inset:0; background:rgba(8,8,16,0.82); display:flex; align-items:center; justify-content:center; z-index:2; }
 .badge-sold span { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.15em; color:var(--rojo); border:2px solid var(--rojo); padding:6px 14px; border-radius:4px; transform:rotate(-15deg); }
 .badge-stock-low { position:absolute; bottom:8px; left:8px; background:var(--rojo3); border:1px solid var(--rojo); color:var(--rojo); font-family:'Rajdhani',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; border-radius:2px; padding:2px 7px; z-index:1; }
-.product-img img { width:100%; height:100%; object-fit:contain; padding:8px; }
+.product-img img { width:100%; height:100%; object-fit:cover; }
 .btn-vendido { background:transparent; border:1px solid rgba(224,48,48,0.3); color:var(--rojo); border-radius:3px; padding:6px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
 .btn-vendido:hover { background:var(--rojo3); border-color:var(--rojo); }
 .btn-restaurar { background:transparent; border:1px solid var(--borde-b); color:var(--gris2); border-radius:3px; padding:6px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
@@ -933,6 +933,7 @@ function renderProducts(list) {
       const img = document.createElement('img');
       img.src = p.imagen;
       img.alt = p.name;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
       img.onerror = function() { this.style.display='none'; fallback.style.display='flex'; };
       const fallback = document.createElement('span');
       fallback.textContent = p.emoji;
@@ -1100,7 +1101,7 @@ function showDetail(id) {
   // Update meta tags only (no URL manipulation - breaks on GitHub Pages)
   updateMetaTags(p);
   const imgHtml = p.imagen
-    ? `<img src="${p.imagen}" alt="${p.name}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:100px">${p.emoji}</span>`
+    ? `<img src="${p.imagen}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:100px">${p.emoji}</span>`
     : `<span>${p.emoji}</span>`;
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-img-area">
