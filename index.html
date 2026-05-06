@@ -340,6 +340,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 }
 
 </style>
+
 </head>
 <body>
 
@@ -564,6 +565,22 @@ body.admin-mode .admin-active-badge { display:flex; }
 
 <div class="toast" id="toast"></div>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5tVDd0N9NYQv4O2rOrlmEYa77kJsLe28",
+    authDomain: "soldit-techmarket.firebaseapp.com",
+    projectId: "soldit-techmarket",
+    storageBucket: "soldit-techmarket.firebasestorage.app",
+    messagingSenderId: "435219763728",
+    appId: "1:435219763728:web:feef095f88432985e53095"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+</script>
+
 <script>
 // ─── CONFIGURACIÓN ───────────────────────────────────────
 const WA_NUMBER = '5491126972862'; // Tu número de WhatsApp
@@ -580,16 +597,57 @@ let deletingId = null;
 
 /* ── LOCALSTORAGE ── */
 function saveData() {
-  localStorage.setItem('soldit_products', JSON.stringify(products));
-  localStorage.setItem('soldit_nextId', String(nextId));
+  // Firestore: save all products as a single document for simplicity
+  // Each product is saved/updated individually
 }
-function loadData() {
+
+async function saveProductToFirestore(p) {
   try {
-    const p = localStorage.getItem('soldit_products');
-    const n = localStorage.getItem('soldit_nextId');
-    if (p) products = JSON.parse(p);
-    if (n) nextId = parseInt(n);
-  } catch(e) { products = []; nextId = 1; }
+    await db.collection('products').doc(String(p.id)).set(p);
+  } catch(e) {
+    console.error('Error guardando producto:', e);
+    showToast('⚠ ERROR AL GUARDAR EN LA NUBE');
+  }
+}
+
+async function deleteProductFromFirestore(id) {
+  try {
+    await db.collection('products').doc(String(id)).delete();
+  } catch(e) {
+    console.error('Error eliminando producto:', e);
+  }
+}
+async function loadData() {
+  try {
+    showLoadingState();
+    const snapshot = await db.collection('products').orderBy('id').get();
+    products = [];
+    snapshot.forEach(doc => {
+      products.push(doc.data());
+    });
+    // Set nextId to max id + 1
+    if (products.length > 0) {
+      nextId = Math.max(...products.map(p => p.id)) + 1;
+    } else {
+      nextId = 1;
+    }
+    filterProducts();
+    applyAdminUI();
+  } catch(e) {
+    console.error('Error cargando productos:', e);
+    showToast('⚠ ERROR AL CARGAR PRODUCTOS');
+    filterProducts();
+  }
+}
+
+function showLoadingState() {
+  const grid = document.getElementById('productsGrid');
+  const empty = document.getElementById('emptyState');
+  if (grid) grid.innerHTML = '';
+  if (empty) {
+    empty.innerHTML = '<div class="empty-icon">⏳</div><div class="empty-title">CARGANDO...</div><div class="empty-sub">Obteniendo productos desde la nube</div>';
+    empty.style.display = 'flex';
+  }
 }
 
 /* ── URLs COMPARTIBLES ── */
@@ -727,12 +785,14 @@ function saveProduct() {
   if (editingId) {
     const idx = products.findIndex(x => x.id===editingId);
     products[idx] = {...products[idx], ...data, sold: products[idx].sold};
+    saveProductToFirestore(products[idx]);
     showToast('✔ PRODUCTO ACTUALIZADO');
   } else {
-    products.push({id: nextId++, ...data});
+    const newProduct = {id: nextId++, ...data};
+    products.push(newProduct);
+    saveProductToFirestore(newProduct);
     showToast('✔ PRODUCTO AGREGADO');
   }
-  saveData();
   closeModal();
   filterProducts();
 }
@@ -750,10 +810,10 @@ function closeConfirm() {
   deletingId = null;
 }
 function confirmDelete() {
+  deleteProductFromFirestore(deletingId);
   products = products.filter(x => x.id !== deletingId);
   cart     = cart.filter(x => x.id !== deletingId);
   updateCartBadge();
-  saveData();
   closeConfirm();
   filterProducts();
   showToast('🗑 PRODUCTO ELIMINADO');
@@ -765,7 +825,7 @@ function marcarVendido(id) {
   if (!p) return;
   p.sold = true;
   p.stock = 0;
-  saveData();
+  saveProductToFirestore(p);
   filterProducts();
   showToast('✔ MARCADO COMO VENDIDO');
 }
@@ -774,7 +834,7 @@ function restaurarProducto(id) {
   if (!p) return;
   p.sold = false;
   p.stock = 1;
-  saveData();
+  saveProductToFirestore(p);
   filterProducts();
   showToast('✔ PRODUCTO RESTAURADO');
 }
@@ -1202,11 +1262,10 @@ function closeLoginOutside(e) {
   if (e.target.id === 'loginOverlay') closeLogin();
 }
 
-loadData();
-filterProducts();
+// loadData is async - it calls filterProducts and applyAdminUI when done
 updateMetaTags(null);
 checkUrlProduct();
-applyAdminUI();
+loadData();
 </script>
 </body>
 </html>
