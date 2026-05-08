@@ -408,6 +408,16 @@ body.admin-mode .admin-active-badge { display:flex; }
 .cats-fade.right { right:0; background:linear-gradient(to left,  rgba(8,8,16,0.95), transparent); }
 .cats-fade.visible { opacity:1; }
 .cats-fade svg { width:18px; height:18px; fill:var(--gris2); }
+
+/* ── ADMIN NAV BTN ── */
+.admin-nav-btn { background:transparent; border:1px solid var(--borde-b); color:var(--gris3); border-radius:4px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; flex-shrink:0; }
+.admin-nav-btn:hover { border-color:var(--amarillo); color:var(--amarillo); }
+.admin-nav-btn.active { border-color:var(--amarillo); color:var(--amarillo); background:var(--amarillo3); }
+
+/* ── WHATSAPP FAB ── */
+.wa-fab { position:fixed; bottom:22px; right:22px; z-index:500; width:52px; height:52px; border-radius:50%; background:#25d366; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,0.4); transition:all .25s; text-decoration:none; }
+.wa-fab:hover { background:#20ba5a; transform:scale(1.1); box-shadow:0 6px 24px rgba(37,211,102,0.5); }
+.wa-fab svg { width:28px; height:28px; fill:#fff; }
 </style>
 
 </head>
@@ -427,6 +437,9 @@ body.admin-mode .admin-active-badge { display:flex; }
       <button class="admin-active-badge" id="adminActiveBadge" onclick="logoutAdmin()">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         ADMIN ACTIVO — CERRAR
+      </button>
+      <button class="admin-nav-btn" id="adminFab" onclick="toggleAdminPanel()" title="Panel administrador">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </button>
       <button class="cart-btn" onclick="showCart()">▤ CARRITO <span class="cart-badge" id="cartBadge">0</span></button>
     </div>
@@ -1384,12 +1397,10 @@ function applyAdminUI() {
   const fab = document.getElementById('adminFab');
   if (isAdmin()) {
     document.body.classList.add('admin-mode');
-    fab.classList.add('active');
-    fab.title = 'Cerrar sesión admin';
+    if(fab) { fab.classList.add('active'); fab.title = 'Cerrar sesión admin'; }
   } else {
     document.body.classList.remove('admin-mode');
-    fab.classList.remove('active');
-    fab.title = 'Panel administrador';
+    if(fab) { fab.classList.remove('active'); fab.title = 'Panel administrador'; }
   }
   // Re-render cards so admin buttons show/hide correctly
   // but only if homeView is visible
@@ -1504,5 +1515,11 @@ checkUrlProduct();
 
 loadData();
 </script>
+
+<!-- WHATSAPP FAB -->
+<a class="wa-fab" href="https://wa.me/5491126972862" target="_blank" title="Consultar por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.127 1.534 5.864L0 24l6.335-1.534A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.49-5.19-1.348l-.372-.22-3.862.937.955-3.765-.242-.387A9.961 9.961 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
 </body>
 </html>
