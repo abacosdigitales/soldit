@@ -41,10 +41,10 @@ body::before {
     repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(46,127,255,0.018) 40px,rgba(46,127,255,0.018) 41px);
   pointer-events:none; z-index:0;
 }
-#app { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+#app { max-width:1360px; margin:0 auto; position:relative; z-index:1; }
 
 /* NAV */
-.nav { position:sticky; top:0; z-index:100; background:rgba(8,8,16,0.97); border-bottom:1px solid var(--borde-a); backdrop-filter:blur(12px); padding:0 40px; }
+.nav { position:sticky; top:0; z-index:100; background:rgba(8,8,16,0.97); border-bottom:1px solid var(--borde-a); backdrop-filter:blur(12px); padding:0 32px; }
 .nav-top { display:flex; align-items:center; gap:12px; height:64px; }
 .logo { cursor:pointer; white-space:nowrap; line-height:1; display:inline-flex; flex-direction:column; align-items:stretch; gap:2px; }
 .logo-top { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:0.10em; display:flex; justify-content:space-between; }
@@ -72,7 +72,7 @@ body::before {
 .cat-pill.active { border-color:var(--amarillo); color:var(--amarillo); background:var(--amarillo3); }
 
 /* FILTERS */
-.filters-row { display:flex; gap:8px; padding:14px 40px 8px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--borde-b); }
+.filters-row { display:flex; gap:8px; padding:14px 32px 8px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--borde-b); }
 .filter-select { padding:6px 12px; border-radius:4px; border:1px solid var(--borde-b); font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; background:var(--negro3); color:var(--gris1); cursor:pointer; }
 .filter-select:focus { outline:none; border-color:var(--azul); }
 .results-count { font-size:12px; color:var(--gris3); margin-left:auto; letter-spacing:0.08em; text-transform:uppercase; font-weight:500; }
@@ -80,7 +80,7 @@ body::before {
 .btn-nuevo-prod:hover { background:var(--amarillo2); }
 
 /* GRID */
-.products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; padding:16px 40px 24px; }
+.products-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; padding:16px 32px 24px; }
 .product-card { background:var(--negro2); border:1px solid var(--borde-b); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; position:relative; transition:border-color .25s,transform .25s; }
 .product-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amarillo),var(--azul)); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
 .product-card:hover { border-color:rgba(46,127,255,0.45); transform:translateY(-3px); }
@@ -294,7 +294,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 
 
 /* ── HERO BANNER ── */
-.hero-banner { position:relative; overflow:hidden; padding:40px 40px 32px; border-bottom:1px solid var(--borde-a); display:flex; align-items:center; justify-content:space-between; gap:20px; background:linear-gradient(135deg, rgba(245,196,0,0.04) 0%, transparent 50%, rgba(46,127,255,0.04) 100%); }
+.hero-banner { position:relative; overflow:hidden; padding:40px 32px 32px; border-bottom:1px solid var(--borde-a); display:flex; align-items:center; justify-content:space-between; gap:20px; background:linear-gradient(135deg, rgba(245,196,0,0.04) 0%, transparent 50%, rgba(46,127,255,0.04) 100%); }
 .hero-grid-lines { position:absolute; inset:0; background-image: repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(245,196,0,0.03) 28px,rgba(245,196,0,0.03) 29px), repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(46,127,255,0.03) 28px,rgba(46,127,255,0.03) 29px); pointer-events:none; }
 .hero-content { position:relative; z-index:1; max-width:55%; }
 .hero-tag { display:inline-flex; align-items:center; gap:6px; background:var(--amarillo3); border:1px solid var(--borde-a); border-radius:20px; padding:4px 14px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; color:var(--amarillo); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:14px; }
@@ -316,7 +316,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 .hf-card span { font-size:12px; }
 
 /* ── FOOTER ── */
-.site-footer { border-top:1px solid var(--borde-a); margin-top:40px; padding:32px 40px 0; background:var(--negro2); }
+.site-footer { border-top:1px solid var(--borde-a); margin-top:40px; padding:32px 32px 0; background:var(--negro2); }
 .footer-inner { display:flex; gap:40px; justify-content:space-between; flex-wrap:wrap; margin-bottom:24px; }
 .footer-brand { flex:1; min-width:180px; }
 .footer-logo { font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700; letter-spacing:0.08em; color:var(--amarillo); }
@@ -399,6 +399,14 @@ body.admin-mode .admin-active-badge { display:flex; }
   .footer-bottom { flex-direction:column; text-align:center; }
 }
 
+
+/* ── CATS BAR ARROWS ── */
+.cats-bar-wrap { position:relative; overflow:hidden; }
+.cats-fade { position:absolute; top:0; bottom:0; width:48px; pointer-events:none; z-index:10; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
+.cats-fade.left  { left:0;  background:linear-gradient(to right, rgba(8,8,16,0.95), transparent); }
+.cats-fade.right { right:0; background:linear-gradient(to left,  rgba(8,8,16,0.95), transparent); }
+.cats-fade.visible { opacity:1; }
+.cats-fade svg { width:18px; height:18px; fill:var(--gris2); }
 </style>
 
 </head>
@@ -421,25 +429,33 @@ body.admin-mode .admin-active-badge { display:flex; }
       </button>
       <button class="cart-btn" onclick="showCart()">▤ CARRITO <span class="cart-badge" id="cartBadge">0</span></button>
     </div>
-    <div class="cats-bar" id="catsBar">
-      <div class="cat-pill active" onclick="filterCat('all',this)">◈ TODOS</div>
-      <div class="cat-pill" onclick="filterCat('smartphone',this)">📱 SMARTPHONES</div>
-      <div class="cat-pill" onclick="filterCat('laptop',this)">💻 LAPTOPS</div>
-      <div class="cat-pill" onclick="filterCat('gaming',this)">🎮 GAMING</div>
-      <div class="cat-pill" onclick="filterCat('audio',this)">🎧 AUDIO</div>
-      <div class="cat-pill" onclick="filterCat('accesorio',this)">⌨️ ACCESORIOS</div>
-      <div class="cat-pill" onclick="filterCat('tablet',this)">📟 TABLETS</div>
-      <div class="cat-pill" onclick="filterCat('camara',this)">📸 CÁMARAS</div>
-      <div class="cat-pill" onclick="filterCat('monitor',this)">🖥️ MONITORES</div>
-      <div class="cat-pill" onclick="filterCat('wearable',this)">⌚ WEARABLES</div>
-      <div class="cat-pill" onclick="filterCat('impresora',this)">🖨️ IMPRESORAS</div>
-      <div class="cat-pill" onclick="filterCat('cable',this)">🔌 CABLES</div>
-      <div class="cat-pill" onclick="filterCat('almacenamiento',this)">💾 ALMACENAMIENTO</div>
-      <div class="cat-pill" onclick="filterCat('periferico',this)">🖱️ PERIFÉRICOS</div>
-      <div class="cat-pill" onclick="filterCat('redes',this)">📡 REDES</div>
-      <div class="cat-pill" onclick="filterCat('bateria',this)">🔋 BATERÍAS</div>
-      <div class="cat-pill" onclick="filterCat('microfono',this)">🎙️ MICRÓFONOS</div>
-      <div class="cat-pill" onclick="filterCat('hardware',this)">🔧 HARDWARE</div>
+    <div class="cats-bar-wrap">
+      <div class="cats-fade left" id="catsFadeLeft">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="cats-bar" id="catsBar">
+        <div class="cat-pill active" onclick="filterCat('all',this)">◈ TODOS</div>
+        <div class="cat-pill" onclick="filterCat('smartphone',this)">📱 SMARTPHONES</div>
+        <div class="cat-pill" onclick="filterCat('laptop',this)">💻 LAPTOPS</div>
+        <div class="cat-pill" onclick="filterCat('gaming',this)">🎮 GAMING</div>
+        <div class="cat-pill" onclick="filterCat('audio',this)">🎧 AUDIO</div>
+        <div class="cat-pill" onclick="filterCat('accesorio',this)">⌨️ ACCESORIOS</div>
+        <div class="cat-pill" onclick="filterCat('tablet',this)">📟 TABLETS</div>
+        <div class="cat-pill" onclick="filterCat('camara',this)">📸 CÁMARAS</div>
+        <div class="cat-pill" onclick="filterCat('monitor',this)">🖥️ MONITORES</div>
+        <div class="cat-pill" onclick="filterCat('wearable',this)">⌚ WEARABLES</div>
+        <div class="cat-pill" onclick="filterCat('impresora',this)">🖨️ IMPRESORAS</div>
+        <div class="cat-pill" onclick="filterCat('cable',this)">🔌 CABLES</div>
+        <div class="cat-pill" onclick="filterCat('almacenamiento',this)">💾 ALMACENAMIENTO</div>
+        <div class="cat-pill" onclick="filterCat('periferico',this)">🖱️ PERIFÉRICOS</div>
+        <div class="cat-pill" onclick="filterCat('redes',this)">📡 REDES</div>
+        <div class="cat-pill" onclick="filterCat('bateria',this)">🔋 BATERÍAS</div>
+        <div class="cat-pill" onclick="filterCat('microfono',this)">🎙️ MICRÓFONOS</div>
+        <div class="cat-pill" onclick="filterCat('hardware',this)">🔧 HARDWARE</div>
+      </div>
+      <div class="cats-fade right" id="catsFadeRight">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </div>
     </div></div>
     </div>
   </div>
@@ -1447,6 +1463,39 @@ checkUrlProduct();
     } else if (x > rect.width - ZONE) {
       const intensity = 1 - ((rect.width - x) / ZONE);
       scrollInterval = setInterval(() => bar.scrollLeft += SPEED * (1 + intensity * 2), 16);
+    }
+  });
+  bar.addEventListener('mouseleave', () => clearInterval(scrollInterval));
+})();
+
+/* ── CATS EDGE SCROLL ── */
+(function() {
+  const bar   = document.getElementById('catsBar');
+  const fadeL = document.getElementById('catsFadeLeft');
+  const fadeR = document.getElementById('catsFadeRight');
+  if (!bar) return;
+  let scrollInterval = null;
+  const ZONE = 80;
+  const SPEED = 4;
+
+  function updateArrows() {
+    if (fadeL) fadeL.classList.toggle('visible', bar.scrollLeft > 10);
+    if (fadeR) fadeR.classList.toggle('visible', bar.scrollLeft < bar.scrollWidth - bar.clientWidth - 10);
+  }
+
+  bar.addEventListener('scroll', updateArrows);
+  setTimeout(updateArrows, 500);
+
+  bar.addEventListener('mousemove', e => {
+    const rect = bar.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    clearInterval(scrollInterval);
+    if (x < ZONE) {
+      const intensity = 1 - (x / ZONE);
+      scrollInterval = setInterval(() => { bar.scrollLeft -= SPEED * (1 + intensity * 2); updateArrows(); }, 16);
+    } else if (x > rect.width - ZONE) {
+      const intensity = 1 - ((rect.width - x) / ZONE);
+      scrollInterval = setInterval(() => { bar.scrollLeft += SPEED * (1 + intensity * 2); updateArrows(); }, 16);
     }
   });
   bar.addEventListener('mouseleave', () => clearInterval(scrollInterval));
