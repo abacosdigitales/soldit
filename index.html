@@ -23,6 +23,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
 :root {
+  --side-pad: 32px;
   --negro: #080810; --negro2: #0e0e1a; --negro3: #14141f; --negro4: #1c1c2a;
   --amarillo: #f5c400; --amarillo2: #d4a900; --amarillo3: rgba(245,196,0,0.10);
   --azul: #2e7fff; --azul2: #1a6be0; --azul3: rgba(46,127,255,0.10);
@@ -44,7 +45,7 @@ body::before {
 #app { max-width:1360px; margin:0 auto; position:relative; z-index:1; }
 
 /* NAV */
-.nav { position:sticky; top:0; z-index:100; background:rgba(8,8,16,0.97); border-bottom:1px solid var(--borde-a); backdrop-filter:blur(12px); padding:0 32px; }
+.nav { position:sticky; top:0; z-index:100; background:rgba(8,8,16,0.97); border-bottom:1px solid var(--borde-a); backdrop-filter:blur(12px); padding:0 var(--side-pad); }
 .nav-top { display:flex; align-items:center; gap:12px; height:64px; }
 .logo { cursor:pointer; white-space:nowrap; line-height:1; display:inline-flex; flex-direction:column; align-items:stretch; gap:2px; }
 .logo-top { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:0.10em; display:flex; justify-content:space-between; }
@@ -72,7 +73,7 @@ body::before {
 .cat-pill.active { border-color:var(--amarillo); color:var(--amarillo); background:var(--amarillo3); }
 
 /* FILTERS */
-.filters-row { display:flex; gap:8px; padding:14px 32px 8px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--borde-b); }
+.filters-row { display:flex; gap:8px; padding:14px 120px 8px; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--borde-b); }
 .filter-select { padding:6px 12px; border-radius:4px; border:1px solid var(--borde-b); font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; background:var(--negro3); color:var(--gris1); cursor:pointer; }
 .filter-select:focus { outline:none; border-color:var(--azul); }
 .results-count { font-size:12px; color:var(--gris3); margin-left:auto; letter-spacing:0.08em; text-transform:uppercase; font-weight:500; }
@@ -80,7 +81,7 @@ body::before {
 .btn-nuevo-prod:hover { background:var(--amarillo2); }
 
 /* GRID */
-.products-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; padding:16px 32px 24px; }
+.products-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; padding:16px 120px 24px; }
 .product-card { background:var(--negro2); border:1px solid var(--borde-b); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; position:relative; transition:border-color .25s,transform .25s; }
 .product-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amarillo),var(--azul)); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
 .product-card:hover { border-color:rgba(46,127,255,0.45); transform:translateY(-3px); }
@@ -136,7 +137,7 @@ body::before {
 .btn-save:hover { background:var(--amarillo2); }
 
 /* DETAIL */
-.detail-view { display:none; padding:16px 40px; }
+.detail-view { display:none; padding:16px 120px; }
 .back-btn { background:transparent; border:1px solid var(--borde-b); color:var(--gris2); border-radius:4px; padding:6px 16px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; margin-bottom:16px; transition:all .2s; }
 .back-btn:hover { border-color:var(--azul); color:var(--azul); }
 .detail-card { background:var(--negro2); border:1px solid var(--borde-b); border-radius:6px; overflow:hidden; display:grid; grid-template-columns:1fr 1.2fr; }
@@ -161,7 +162,7 @@ body::before {
 .detail-desc { font-size:13px; color:var(--gris2); line-height:1.65; }
 
 /* CART */
-.cart-view  { display:none; padding:16px 40px; }
+.cart-view  { display:none; padding:16px 120px; }
 .cart-title { font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700; letter-spacing:0.05em; margin-bottom:16px; }
 .cart-title span { color:var(--amarillo); }
 .cart-empty { text-align:center; padding:48px; color:var(--gris3); font-size:14px; letter-spacing:0.05em; }
@@ -294,7 +295,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 
 
 /* ── HERO BANNER ── */
-.hero-banner { position:relative; overflow:hidden; padding:40px 32px 32px; border-bottom:1px solid var(--borde-a); display:flex; align-items:center; justify-content:space-between; gap:20px; background:linear-gradient(135deg, rgba(245,196,0,0.04) 0%, transparent 50%, rgba(46,127,255,0.04) 100%); }
+.hero-banner { position:relative; overflow:hidden; padding:40px 120px 32px; border-bottom:1px solid var(--borde-a); display:flex; align-items:center; justify-content:space-between; gap:20px; background:linear-gradient(135deg, rgba(245,196,0,0.04) 0%, transparent 50%, rgba(46,127,255,0.04) 100%); }
 .hero-grid-lines { position:absolute; inset:0; background-image: repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(245,196,0,0.03) 28px,rgba(245,196,0,0.03) 29px), repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(46,127,255,0.03) 28px,rgba(46,127,255,0.03) 29px); pointer-events:none; }
 .hero-content { position:relative; z-index:1; max-width:55%; }
 .hero-tag { display:inline-flex; align-items:center; gap:6px; background:var(--amarillo3); border:1px solid var(--borde-a); border-radius:20px; padding:4px 14px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; color:var(--amarillo); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:14px; }
@@ -316,7 +317,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 .hf-card span { font-size:12px; }
 
 /* ── FOOTER ── */
-.site-footer { border-top:1px solid var(--borde-a); margin-top:40px; padding:32px 32px 0; background:var(--negro2); }
+.site-footer { border-top:1px solid var(--borde-a); margin-top:40px; padding:32px 120px 0; background:var(--negro2); }
 .footer-inner { display:flex; gap:40px; justify-content:space-between; flex-wrap:wrap; margin-bottom:24px; }
 .footer-brand { flex:1; min-width:180px; }
 .footer-logo { font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700; letter-spacing:0.08em; color:var(--amarillo); }
@@ -401,7 +402,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 
 
 /* ── CATS BAR ARROWS ── */
-.cats-bar-wrap { position:relative; overflow:hidden; }
+.cats-bar-wrap { position:relative; }
 .cats-fade { position:absolute; top:0; bottom:0; width:48px; pointer-events:none; z-index:10; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
 .cats-fade.left  { left:0;  background:linear-gradient(to right, rgba(8,8,16,0.95), transparent); }
 .cats-fade.right { right:0; background:linear-gradient(to left,  rgba(8,8,16,0.95), transparent); }
