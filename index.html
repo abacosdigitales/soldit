@@ -225,8 +225,15 @@ body::before {
   .cats-bar { padding:8px 0; gap:4px; }
   .cat-pill { font-size:11px; padding:4px 10px; }
 
-  /* HERO */
-  .hero-banner { display:none; }
+  /* HERO - mobile: show only centered logo */
+  .hero-banner { padding:16px; justify-content:center; min-height:auto; background:none; }
+  .hero-grid-lines { display:none; }
+  .hero-content { display:none; }
+  .hero-deco { display:flex !important; justify-content:center; align-items:center; width:100%; }
+  .hero-logo-center { margin:0; }
+  .hero-logo-img { width:120px; height:120px; }
+  .hero-float { display:none; }
+  .hero-circle { display:none; }
 
   /* FILTERS */
   .filters-row { padding:10px 16px 8px; gap:6px; }
