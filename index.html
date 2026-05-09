@@ -213,13 +213,66 @@ body::before {
 .stock-indicator.low { color:var(--rojo); font-weight:600; }
 /* detail sold overlay */
 .detail-sold-overlay { background:var(--rojo3); border:1px solid var(--rojo); border-radius:4px; padding:10px 16px; text-align:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px; color:var(--rojo); letter-spacing:0.1em; margin-bottom:12px; }
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  /* NAV */
   .nav-top { flex-wrap:wrap; height:auto; padding:10px 0; gap:8px; }
   .logo { order:0; }
-  .cart-btn { order:1; margin-left:auto; }
-  .search-bar { order:2; width:100%; }
+  .admin-nav-btn { order:1; }
+  .cart-btn { order:2; margin-left:auto; }
+  .search-bar { order:3; width:100%; }
+
+  /* CATS BAR */
+  .cats-bar { padding:8px 0; gap:4px; }
+  .cat-pill { font-size:11px; padding:4px 10px; }
+
+  /* HERO */
+  .hero-banner { flex-direction:column; padding:20px 16px 16px; gap:12px; }
+  .hero-content { max-width:100%; }
+  .hero-title { font-size:24px; }
+  .hero-deco { display:none; }
+  .hero-stats { gap:10px; }
+  .hero-stat span { font-size:18px; }
+
+  /* FILTERS */
+  .filters-row { padding:10px 16px 8px; gap:6px; }
+  .filter-select { font-size:11px; padding:5px 8px; }
+
+  /* PRODUCTS GRID */
+  .products-grid { grid-template-columns:repeat(2,1fr); gap:8px; padding:10px 16px 20px; }
+  .product-name { font-size:12px; }
+  .product-price { font-size:16px; }
+  .product-seller { font-size:10px; }
+  .product-shipping { font-size:10px; }
+
+  /* CARD ACTIONS */
+  .card-actions-top { padding:0 8px 4px; gap:4px; }
+  .btn-carrito { font-size:10px; padding:5px; }
+  .btn-compartir { font-size:10px; padding:5px; }
+
+  /* DETAIL */
   .detail-card { grid-template-columns:1fr; }
-  .detail-img-area { border-right:none; border-bottom:1px solid var(--borde-b); padding:24px; font-size:70px; }
+  .detail-img-area { border-right:none; border-bottom:1px solid var(--borde-b); padding:20px; min-height:220px; }
+  .detail-title { font-size:20px; }
+  .detail-price { font-size:28px; }
+  .detail-view { padding:16px; }
+  .cart-view { padding:16px; }
+
+  /* MODAL */
+  .modal-box { margin:10px; max-height:90vh; overflow-y:auto; }
+  .modal-body { grid-template-columns:1fr; }
+
+  /* FOOTER */
+  .footer-inner { flex-direction:column; gap:20px; }
+  .footer-links { flex-direction:column; gap:16px; }
+  .footer-bottom { flex-direction:column; text-align:center; gap:6px; }
+  .site-footer { padding:24px 16px 0; }
+
+  /* LOGIN MODAL */
+  .login-box { margin:16px; padding:24px 20px 20px; }
+
+  /* WA FAB */
+  .wa-fab { width:46px; height:46px; bottom:16px; right:16px; }
+  .wa-fab svg { width:24px; height:24px; }
 }
 
 
@@ -390,15 +443,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 .btn-add-product { background:var(--amarillo); color:var(--negro); border:none; border-radius:5px; padding:12px 24px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:opacity .2s; }
 .btn-add-product:hover { opacity:0.88; }
 
-@media(max-width:600px) {
-  .hero-banner { flex-direction:column; padding:28px 16px 20px; }
-  .hero-content { max-width:100%; }
-  .hero-title { font-size:26px; }
-  .hero-deco { display:none; }
-  .footer-inner { flex-direction:column; gap:24px; }
-  .footer-links { flex-direction:column; gap:20px; }
-  .footer-bottom { flex-direction:column; text-align:center; }
-}
+/* mobile styles handled above */
 
 
 /* ── CATS BAR ARROWS ── */
