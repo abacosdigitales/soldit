@@ -484,6 +484,37 @@ body.admin-mode .admin-active-badge { display:flex; }
 .footer-bottom { border-top:1px solid var(--borde-b); padding:14px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
 .footer-bottom span { font-size:11px; color:var(--gris3); }
 .footer-badge { color:var(--amarillo) !important; font-family:'Rajdhani',sans-serif; font-weight:600; letter-spacing:0.06em; }
+
+/* ── CARGA MASIVA ── */
+.bulk-view { display:none; padding:24px 120px; }
+.bulk-header { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; letter-spacing:0.08em; color:var(--blanco); margin-bottom:4px; }
+.bulk-header span { color:var(--amarillo); }
+.bulk-sub { font-size:13px; color:var(--gris3); margin-bottom:24px; }
+.bulk-box { background:var(--negro2); border:1px solid var(--borde-a); border-radius:8px; padding:24px; margin-bottom:16px; }
+.bulk-label { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; color:var(--amarillo); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; display:block; }
+.bulk-textarea { width:100%; min-height:220px; background:var(--negro3); border:1px solid var(--borde-b); border-radius:5px; padding:12px; font-family:'Inter',sans-serif; font-size:12px; color:var(--blanco); outline:none; resize:vertical; line-height:1.6; transition:border-color .2s; box-sizing:border-box; }
+.bulk-textarea:focus { border-color:var(--amarillo); }
+.bulk-format { font-size:11px; color:var(--gris3); margin-top:8px; line-height:1.7; }
+.bulk-format code { background:var(--negro3); border:1px solid var(--borde-b); border-radius:3px; padding:1px 6px; color:var(--azul); font-size:11px; }
+.bulk-actions { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.btn-bulk-parse { background:var(--azul); color:#fff; border:none; border-radius:5px; padding:10px 20px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:opacity .2s; }
+.btn-bulk-parse:hover { opacity:0.85; }
+.btn-bulk-upload { background:var(--amarillo); color:var(--negro); border:none; border-radius:5px; padding:10px 20px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:opacity .2s; display:none; }
+.btn-bulk-upload:hover { opacity:0.85; }
+.btn-bulk-clear { background:transparent; color:var(--gris3); border:1px solid var(--borde-b); border-radius:5px; padding:10px 16px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+.btn-bulk-clear:hover { border-color:var(--rojo); color:var(--rojo); }
+.bulk-preview { overflow-x:auto; }
+.bulk-table { width:100%; border-collapse:collapse; font-size:12px; }
+.bulk-table th { background:var(--negro3); border:1px solid var(--borde-b); padding:8px 10px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; color:var(--amarillo); letter-spacing:0.06em; text-align:left; text-transform:uppercase; white-space:nowrap; }
+.bulk-table td { border:1px solid var(--borde-b); padding:7px 10px; color:var(--gris2); vertical-align:middle; }
+.bulk-table tr:hover td { background:rgba(255,255,255,0.02); }
+.bulk-status { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.06em; padding:10px 0; min-height:20px; }
+.bulk-status.ok { color:#25d366; }
+.bulk-status.error { color:var(--rojo); }
+.bulk-status.loading { color:var(--azul); }
+.bulk-count { font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--gris3); margin-bottom:12px; }
+.bulk-count span { color:var(--amarillo); font-weight:700; }
+@media(max-width:768px) { .bulk-view { padding:16px; } }
 </style>
 
 </head>
@@ -504,6 +535,7 @@ body.admin-mode .admin-active-badge { display:flex; }
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         ADMIN ACTIVO — CERRAR
       </button>
+      <button class="admin-controls" style="background:transparent;border:1px solid var(--borde-b);color:var(--gris3);border-radius:4px;padding:5px 10px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='var(--amarillo)';this.style.color='var(--amarillo)'" onmouseout="this.style.borderColor='var(--borde-b)';this.style.color='var(--gris3)'" onclick="showBulkView()">⬆ MASIVA</button>
       <button class="admin-nav-btn" id="adminFab" onclick="toggleAdminPanel()" title="Panel administrador">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </button>
@@ -723,6 +755,36 @@ body.admin-mode .admin-active-badge { display:flex; }
   </div>
 </div>
 
+
+
+  <!-- CARGA MASIVA -->
+  <div id="bulkView" style="display:none;">
+    <div class="bulk-view">
+      <div class="bulk-header">CARGA <span>MASIVA</span></div>
+      <p class="bulk-sub">Pegá tu listado y subí todos los productos a Firestore de una vez. Las fotos se agregan después editando cada producto.</p>
+      <div class="bulk-box">
+        <label class="bulk-label">📋 Pegá tu listado aquí</label>
+        <textarea class="bulk-textarea" id="bulkInput" placeholder="nombre|categoria|condicion|precio|precio_original|stock|vendedor|envio_gratis|cuotas|descripcion
+Lenovo ThinkPad L15|laptop|used|788000||1|Ariel Diego Díaz|no||Laptop usada en excelente estado
+Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bluetooth"></textarea>
+        <div class="bulk-format">
+          <strong style="color:var(--gris2)">Formato:</strong> separar campos con <code>|</code> — una línea por producto — primera línea es el encabezado<br>
+          <strong style="color:var(--gris2)">Categorías:</strong> <code>smartphone</code> <code>laptop</code> <code>gaming</code> <code>audio</code> <code>accesorio</code> <code>tablet</code> <code>camara</code> <code>monitor</code> <code>wearable</code> <code>impresora</code> <code>cable</code> <code>almacenamiento</code> <code>periferico</code> <code>redes</code> <code>bateria</code> <code>microfono</code> <code>hardware</code><br>
+          <strong style="color:var(--gris2)">Condición:</strong> <code>new</code> o <code>used</code> &nbsp;|&nbsp;
+          <strong style="color:var(--gris2)">Envío:</strong> <code>si</code> o <code>no</code> &nbsp;|&nbsp;
+          <strong style="color:var(--gris2)">Cuotas:</strong> número o vacío
+        </div>
+      </div>
+      <div class="bulk-actions">
+        <button class="btn-bulk-parse" onclick="parseBulk()">👁 PREVISUALIZAR</button>
+        <button class="btn-bulk-upload" id="btnBulkUpload" onclick="uploadBulk()">⬆ SUBIR A FIRESTORE</button>
+        <button class="btn-bulk-clear" onclick="clearBulk()">✕ LIMPIAR</button>
+      </div>
+      <div class="bulk-status" id="bulkStatus"></div>
+      <div class="bulk-count" id="bulkCount"></div>
+      <div class="bulk-preview" id="bulkPreview"></div>
+    </div>
+  </div>
 
 <!-- ADMIN LOGIN -->
 <div class="login-overlay" id="loginOverlay" onclick="closeLoginOutside(event)">
@@ -1386,6 +1448,7 @@ function showHome() {
   document.getElementById('homeView').style.display   = 'block';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('cartView').style.display   = 'none';
+  const bulkV = document.getElementById('bulkView'); if(bulkV) bulkV.style.display='none';
   const hb3 = document.getElementById('heroBanner'); if(hb3) hb3.style.display='';
   updateMetaTags(null);
 }
@@ -1589,6 +1652,113 @@ checkUrlProduct();
   });
   bar.addEventListener('mouseleave', () => clearInterval(scrollInterval));
 })();
+
+/* ── CARGA MASIVA ── */
+let bulkProducts = [];
+const catEmojisMap = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'🎧', accesorio:'⌨️', tablet:'📟', camara:'📸', monitor:'🖥️', wearable:'⌚', impresora:'🖨️', cable:'🔌', almacenamiento:'💾', periferico:'🖱️', redes:'📡', bateria:'🔋', microfono:'🎙️', hardware:'🔧' };
+
+function showBulkView() {
+  ['homeView','detailView','cartView'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('bulkView').style.display = 'block';
+  const hb = document.getElementById('heroBanner'); if(hb) hb.style.display='none';
+}
+
+function parseBulk() {
+  const raw = document.getElementById('bulkInput').value.trim();
+  if (!raw) { setBulkStatus('⚠ PEGÁ TU LISTADO PRIMERO', 'error'); return; }
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
+  if (lines.length < 2) { setBulkStatus('⚠ NECESITÁS AL MENOS UNA LÍNEA DE DATOS', 'error'); return; }
+  const dataLines = lines.slice(1);
+  bulkProducts = [];
+  const errors = [];
+
+  dataLines.forEach((line, i) => {
+    const parts = line.split('|').map(p => p.trim());
+    const [nombre, cat, cond, precio, precioOrig, stock, vendedor, envio, cuotas, ...descParts] = parts;
+    const desc = descParts.join('|') || '—';
+    if (!nombre || isNaN(parseFloat(precio)) || parseFloat(precio) <= 0) {
+      errors.push('Línea '+(i+2)+': datos inválidos'); return;
+    }
+    bulkProducts.push({
+      id: nextId + bulkProducts.length,
+      name: nombre, cat: cat || 'accesorio',
+      emoji: catEmojisMap[cat] || '📦',
+      cond: cond === 'used' ? 'used' : 'new',
+      price: parseFloat(precio),
+      origPrice: precioOrig && !isNaN(parseFloat(precioOrig)) ? parseFloat(precioOrig) : null,
+      stock: stock && !isNaN(parseInt(stock)) ? parseInt(stock) : 1,
+      seller: vendedor || 'Sold-It TechMarket',
+      shipping: envio === 'si',
+      cuotas: cuotas && !isNaN(parseInt(cuotas)) ? parseInt(cuotas) : null,
+      desc, imagen: null, sold: false, features: {}, rating: null, reviews: 0
+    });
+  });
+
+  if (errors.length) { setBulkStatus('⚠ ' + errors.join(' | '), 'error'); return; }
+  if (!bulkProducts.length) { setBulkStatus('⚠ NO SE ENCONTRARON PRODUCTOS VÁLIDOS', 'error'); return; }
+
+  const rows = bulkProducts.map(p => `<tr>
+    <td>${p.emoji} ${p.name}</td><td>${p.cat}</td>
+    <td>${p.cond==='new'?'Nuevo':'Usado'}</td>
+    <td>$${p.price.toLocaleString('es-AR')}</td>
+    <td>${p.origPrice?'$'+p.origPrice.toLocaleString('es-AR'):'—'}</td>
+    <td>${p.stock}</td><td>${p.seller}</td>
+    <td>${p.shipping?'✔':'—'}</td><td>${p.cuotas||'—'}</td>
+    <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.desc}</td>
+  </tr>`).join('');
+
+  document.getElementById('bulkPreview').innerHTML = `<table class="bulk-table"><thead><tr>
+    <th>Nombre</th><th>Cat.</th><th>Cond.</th><th>Precio</th><th>Precio orig.</th>
+    <th>Stock</th><th>Vendedor</th><th>Envío</th><th>Cuotas</th><th>Descripción</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('bulkCount').innerHTML = `<span>${bulkProducts.length}</span> productos listos para subir`;
+  document.getElementById('btnBulkUpload').style.display = 'inline-block';
+  setBulkStatus('✔ REVISÁ Y CONFIRMÁ LA CARGA', 'ok');
+}
+
+async function uploadBulk() {
+  if (!bulkProducts.length) { setBulkStatus('⚠ PRIMERO PREVISUALIZA', 'error'); return; }
+  document.getElementById('btnBulkUpload').disabled = true;
+  let uploaded = 0, errors = 0;
+  for (const p of bulkProducts) {
+    try {
+      await db.collection('products').doc(String(p.id)).set(p);
+      products.push(p);
+      nextId = Math.max(nextId, p.id + 1);
+      uploaded++;
+      setBulkStatus('⏳ SUBIENDO... '+uploaded+'/'+bulkProducts.length, 'loading');
+    } catch(e) { errors++; console.error(e); }
+  }
+  document.getElementById('btnBulkUpload').disabled = false;
+  if (errors === 0) {
+    setBulkStatus('✔ '+uploaded+' PRODUCTOS SUBIDOS CORRECTAMENTE', 'ok');
+    showToast('✔ '+uploaded+' PRODUCTOS CARGADOS');
+    bulkProducts = [];
+    document.getElementById('bulkInput').value = '';
+    document.getElementById('bulkPreview').innerHTML = '';
+    document.getElementById('bulkCount').innerHTML = '';
+    document.getElementById('btnBulkUpload').style.display = 'none';
+  } else {
+    setBulkStatus('⚠ '+uploaded+' SUBIDOS, '+errors+' CON ERROR', 'error');
+  }
+}
+
+function clearBulk() {
+  bulkProducts = [];
+  ['bulkInput','bulkPreview','bulkCount','bulkStatus'].forEach(id => {
+    const el = document.getElementById(id);
+    if (id === 'bulkInput') el.value = '';
+    else el.innerHTML = '';
+  });
+  document.getElementById('bulkStatus').className = 'bulk-status';
+  document.getElementById('btnBulkUpload').style.display = 'none';
+}
+
+function setBulkStatus(msg, type) {
+  const el = document.getElementById('bulkStatus');
+  el.textContent = msg;
+  el.className = 'bulk-status' + (type ? ' '+type : '');
+}
 
 loadData();
 </script>
