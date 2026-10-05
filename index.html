@@ -486,7 +486,7 @@ body.admin-mode .admin-active-badge { display:flex; }
 .footer-badge { color:var(--amarillo) !important; font-family:'Rajdhani',sans-serif; font-weight:600; letter-spacing:0.06em; }
 
 /* ── CARGA MASIVA ── */
-.bulk-view { display:none; padding:24px 120px; }
+.bulk-view { padding:24px 120px; }
 .bulk-header { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; letter-spacing:0.08em; color:var(--blanco); margin-bottom:4px; }
 .bulk-header span { color:var(--amarillo); }
 .bulk-sub { font-size:13px; color:var(--gris3); margin-bottom:24px; }
@@ -515,6 +515,11 @@ body.admin-mode .admin-active-badge { display:flex; }
 .bulk-count { font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--gris3); margin-bottom:12px; }
 .bulk-count span { color:var(--amarillo); font-weight:700; }
 @media(max-width:768px) { .bulk-view { padding:16px; } }
+
+/* ── MASIVA BTN ── */
+.btn-masiva { display:none; background:transparent; border:1px solid var(--borde-b); color:var(--gris3); border-radius:4px; padding:5px 10px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.06em; cursor:pointer; white-space:nowrap; transition:all .2s; }
+.btn-masiva:hover { border-color:var(--amarillo); color:var(--amarillo); }
+body.admin-mode .btn-masiva { display:inline-block; }
 </style>
 
 </head>
@@ -535,7 +540,7 @@ body.admin-mode .admin-active-badge { display:flex; }
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
         ADMIN ACTIVO — CERRAR
       </button>
-      <button class="admin-controls" style="background:transparent;border:1px solid var(--borde-b);color:var(--gris3);border-radius:4px;padding:5px 10px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='var(--amarillo)';this.style.color='var(--amarillo)'" onmouseout="this.style.borderColor='var(--borde-b)';this.style.color='var(--gris3)'" onclick="showBulkView()">⬆ MASIVA</button>
+      <button class="btn-masiva" id="btnMasiva" onclick="showBulkView()">⬆ MASIVA</button>
       <button class="admin-nav-btn" id="adminFab" onclick="toggleAdminPanel()" title="Panel administrador">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </button>
