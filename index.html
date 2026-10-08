@@ -523,6 +523,25 @@ body.admin-mode .btn-masiva { display:inline-block; }
 .detail-thumbs { position:absolute; top:12px; left:12px; right:12px; display:flex; gap:6px; overflow-x:auto; z-index:2; }
 .detail-thumb { width:46px; height:46px; object-fit:cover; border:1px solid var(--borde-b); border-radius:4px; cursor:pointer; opacity:.7; background:var(--negro3); flex:0 0 auto; }
 .detail-thumb:hover, .detail-thumb.active { opacity:1; border-color:var(--amarillo); }
+/* ── SELECCIÓN MÚLTIPLE Y BORRADO GENERAL (solo admin) ── */
+.btn-nuevo-prod.btn-select-mode { background:transparent; border:1px solid var(--amarillo); color:var(--amarillo); margin-left:6px; }
+.btn-nuevo-prod.btn-select-mode.on { background:rgba(245,196,0,0.16); }
+.product-card.selectable { cursor:pointer; }
+.product-card.selectable > * { pointer-events:none; }
+.product-card.selectable.selected { border-color:var(--amarillo); box-shadow:0 0 0 2px var(--amarillo); }
+.sel-mark { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:28px; height:28px; border-radius:50%; border:2px solid var(--amarillo); background:rgba(8,8,16,0.75); color:var(--amarillo); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; z-index:5; }
+.product-card.selected .sel-mark { background:var(--amarillo); color:var(--negro); }
+.sel-bar { display:none; position:fixed; left:0; right:0; bottom:0; z-index:250; background:var(--negro2); border-top:2px solid var(--amarillo); padding:12px clamp(16px,5vw,120px); gap:10px; align-items:center; flex-wrap:wrap; }
+body.select-mode .sel-bar { display:flex; }
+body.select-mode { padding-bottom:96px; }
+body.select-mode .wa-fab, body.select-mode .admin-fab { display:none !important; }
+.sel-count { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:var(--amarillo); letter-spacing:0.08em; margin-right:auto; }
+.sel-btn { background:transparent; border:1px solid var(--borde-b); color:var(--gris2); border-radius:4px; padding:8px 14px; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; cursor:pointer; }
+.sel-btn:hover { border-color:var(--amarillo); color:var(--amarillo); }
+.btn-sel-delete { background:var(--rojo); color:#fff; border:none; border-radius:4px; padding:9px 18px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; }
+.btn-sel-delete:disabled { opacity:0.35; cursor:not-allowed; }
+.bd-input { width:100%; background:var(--negro3); border:1px solid var(--borde-b); border-radius:5px; padding:10px 12px; color:var(--blanco); font-family:'Inter',sans-serif; font-size:14px; text-align:center; outline:none; }
+.bd-input:focus { border-color:var(--rojo); }
 /* ── ACCESIBILIDAD ── */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:focus-visible { outline:2px solid var(--amarillo); outline-offset:2px; }
 .detail-desc { white-space:pre-line; }
@@ -635,6 +654,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
       </select>
       <div class="results-count" id="resultsCount"></div>
       <button class="btn-nuevo-prod admin-controls" style="display:none;" onclick="openModal()">+ NUEVO PRODUCTO</button>
+      <button class="btn-nuevo-prod btn-select-mode admin-controls" id="btnSelectMode" style="display:none;" onclick="toggleSelectMode()">☑ SELECCIONAR VARIOS</button>
     </div>
     <div class="products-grid" id="productsGrid"></div>
     <div id="emptyState" class="empty-state" style="display:none;"></div>
@@ -770,6 +790,33 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
 </div>
 
 
+
+  <!-- BORRADO GENERAL -->
+<div class="confirm-overlay" id="bulkDeleteOverlay">
+  <div class="confirm-box" style="max-width:440px">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title" id="bdTitle">ELIMINAR PRODUCTOS</div>
+    <div class="confirm-sub" id="bdList" style="text-align:left;max-height:180px;overflow:auto;margin-bottom:10px"></div>
+    <div class="confirm-sub" style="margin-bottom:14px">Esta acción no se puede deshacer. También se borra el costo guardado de los productos del proveedor.</div>
+    <div id="bdTypeWrap" style="display:none;margin-bottom:14px">
+      <input class="bd-input" id="bdType" type="text" placeholder="Escribí ELIMINAR para confirmar" autocomplete="off" oninput="bdTypeCheck()" />
+    </div>
+    <div class="bulk-status" id="bdStatus" style="padding:0 0 10px;min-height:0"></div>
+    <div class="confirm-btns">
+      <button class="btn-conf-cancel" onclick="closeBulkDelete()">CANCELAR</button>
+      <button class="btn-conf-delete" id="bdConfirm" onclick="confirmBulkDelete()">ELIMINAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="sel-bar" id="selBar" role="region" aria-label="Selección múltiple de productos">
+  <span class="sel-count" id="selCount">0 SELECCIONADOS</span>
+  <button class="sel-btn" onclick="selectAllVisible()">SELECCIONAR TODOS (<span id="selVisible">0</span>)</button>
+  <button class="sel-btn" onclick="selectUnlisted()">SOLO NO EN LISTA</button>
+  <button class="sel-btn" onclick="clearSelection()">NINGUNO</button>
+  <button class="btn-sel-delete" id="btnSelDelete" onclick="askBulkDelete()" disabled>🗑 ELIMINAR</button>
+  <button class="sel-btn" onclick="exitSelectMode()">✕ SALIR</button>
+</div>
 
   <!-- CARGA MASIVA -->
   <div id="bulkView" style="display:none;">
@@ -924,6 +971,9 @@ let deletingId = null;
 let dataLoaded = false;
 let routed = false;
 let detailImages = [];
+let selectMode = false;
+const selected = new Set();
+let lastFilteredIds = [];
 
 /* ── HELPERS (seguridad / imágenes / búsqueda) ── */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1007,6 +1057,7 @@ async function saveProductToFirestore(p) {
 async function deleteProductFromFirestore(id) {
   try {
     await db.collection('products').doc(String(id)).delete();
+    try { await db.collection('costs').doc(String(id)).delete(); } catch (e2) { /* sin costo guardado o sin permiso */ }
   } catch(e) {
     console.error('Error eliminando producto:', e);
     showToast('⚠ ERROR AL ELIMINAR — ¿SESIÓN ADMIN ACTIVA?');
@@ -1336,6 +1387,8 @@ function filterProducts() {
     empty.style.display = 'none';
     renderProducts(list);
   }
+  lastFilteredIds = list.map(p => p.id);
+  updateSelectionBar();
 }
 
 /* ── RENDER GRID ── */
@@ -1517,6 +1570,22 @@ function renderProducts(list) {
     adminActions.appendChild(delBtn);
 
     card.appendChild(adminActions);
+    if (selectMode && isAdmin()) {
+      card.dataset.id = p.id;
+      card.classList.add('selectable');
+      const on = selected.has(p.id);
+      if (on) card.classList.add('selected');
+      card.setAttribute('role', 'checkbox');
+      card.setAttribute('aria-checked', on ? 'true' : 'false');
+      card.setAttribute('aria-label', 'Seleccionar ' + p.name);
+      card.tabIndex = 0;
+      card.onclick = () => toggleSelected(p.id);
+      const mark = document.createElement('div');
+      mark.className = 'sel-mark';
+      mark.textContent = on ? '✓' : '';
+      card.appendChild(mark);
+      card.querySelectorAll('[role="button"], button, a').forEach(el => { el.tabIndex = -1; });   // dentro del modo selección no se navega
+    }
     grid.appendChild(card);
   });
 }
@@ -1525,6 +1594,7 @@ function renderProducts(list) {
 function _showDetail(id) {
   const p = products.find(x => x.id===id);
   if (!p) { showHome(); return; }
+  if (selectMode) exitSelectMode();
   document.getElementById('homeView').style.display   = 'none';
   document.getElementById('cartView').style.display   = 'none';
   document.getElementById('detailView').style.display = 'block';
@@ -1585,6 +1655,7 @@ function _showHome() {
 
 /* ── CART ── */
 function _showCart() {
+  if (selectMode) exitSelectMode();
   document.getElementById('homeView').style.display   = 'none';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('cartView').style.display   = 'block';
@@ -1647,6 +1718,7 @@ function isAdmin() { return !!(auth && auth.currentUser); }
 
 function applyAdminUI() {
   const admin = isAdmin();
+  if (!admin && selectMode) { selectMode = false; selected.clear(); document.body.classList.remove('select-mode'); updateSelectionBar(); }
   document.body.classList.toggle('admin-mode', admin);
   document.querySelectorAll('#adminFab, #adminFabFloat').forEach(fab => {
     fab.classList.toggle('active', admin);
@@ -1743,6 +1815,7 @@ let bulkProducts = [];
 const catEmojisMap = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'🎧', accesorio:'⌨️', tablet:'📟', camara:'📸', monitor:'🖥️', wearable:'⌚', impresora:'🖨️', cable:'🔌', almacenamiento:'💾', periferico:'🖱️', redes:'📡', bateria:'🔋', microfono:'🎙️', hardware:'🔧' };
 
 function showBulkView() {
+  if (selectMode) exitSelectMode();
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
   ['homeView','detailView','cartView','supplierView'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('bulkView').style.display = 'block';
@@ -1857,7 +1930,7 @@ function setBulkStatus(msg, type) {
 /* ── LISTAS DE PROVEEDOR (WhatsApp → catálogo) ── */
 const SUP_CAT_RULES = [
   ['smartphone', /celular|smartphone|iphone|galaxy|xiaomi|redmi|motorola|\bmoto\b|telefono/],
-  ['laptop', /notebook|laptop|macbook|portatil/],
+  ['laptop', /notebook|laptop|macbook|portatil|\bimac\b|mac ?mini|mac studio|desktop|all in one|computadora|\bpc\b/],
   ['gaming', /consola|playstation|\bps[45]\b|xbox|nintendo|joystick|gamer|gaming|videojuego/],
   ['audio', /parlante|auricular|airpod|headphone|soundbar|audio|bocina|speaker/],
   ['tablet', /tablet|ipad/],
@@ -1907,16 +1980,43 @@ function parseSupplierText(raw) {
     const price = m ? parseSupplierNumber(m[0]) : NaN;
     if (!name || !isFinite(price) || price <= 0) { errors.push('Línea ' + (i + 1) + ': "' + l.slice(0, 60) + '"'); return; }
     if (!cur) { cur = { header: 'SIN CATEGORÍA', key: 'sin categoria', cat: 'accesorio', items: [] }; groups.push(cur); }
-    cur.items.push({ name, key: supKey(name), costUsd: price, hot: right.includes('🔥') });
+    cur.items.push({ name, rawName: name, key: supKey(name), costUsd: price, hot: right.includes('🔥') });
   });
-  // un mismo producto repetido: queda el último
-  const seen = new Map();
-  groups.forEach(g => g.items.forEach(it => {
-    if (seen.has(it.key)) { warnings.push('Repetido: ' + it.name); seen.get(it.key).dup = true; }
-    seen.set(it.key, it);
-  }));
-  groups.forEach(g => { g.items = g.items.filter(it => !it.dup); });
-  return { groups: groups.filter(g => g.items.length), errors, warnings };
+  const finalGroups = groups.filter(g => g.items.length);
+  finalGroups.forEach(setupGroupPrefix);
+  return { groups: finalGroups, errors, warnings };
+}
+
+// Palabras de categoría genéricas: un título como "PARLANTES" o "NOTEBOOKS" no es una familia de producto
+const SUP_GENERIC = new Set(('parlantes parlante auriculares auricular celulares celular smartphones smartphone notebooks notebook laptops laptop ' +
+  'tablets tablet accesorios accesorio consolas consola relojes reloj monitores monitor camaras camara impresoras impresora cables cable ' +
+  'almacenamiento perifericos periferico redes red bateria baterias microfonos microfono hardware lista listas precio precios actualizada ' +
+  'actualizado oferta ofertas stock disponible disponibles nuevo nuevos nueva usado usados sellado sellados promo promos novedades de del la las el los y en para con por').split(' '));
+
+function fixUnits(name) { return name.replace(/(\d)\s*(gb|tb|mb)\b/gi, (m, d, u) => d + u.toUpperCase()); }
+
+// Título de familia (IMAC, MACBOOK AIR, IPHONE 16): se antepone a los ítems que traen solo especificaciones
+function setupGroupPrefix(g) {
+  g.prefixWords = g.header.split(/\s+/).filter(w => { const n = supKey(w).replace(/ /g, ''); return n && !SUP_GENERIC.has(n) && !/^\d{1,2}[\/.\-]\d{1,2}([\/.\-]\d{2,4})?$/.test(w); });
+  g.prefix = g.prefixWords.join(' ');
+  g.addPrefix = g.prefixWords.length > 0 && g.items.filter(it => needsPrefix(it, g)).length > g.items.length / 2;
+}
+function needsPrefix(it, g) {
+  if (!g.prefixWords.length) return false;
+  return !new Set(supKey(it.rawName).split(' ')).has(supKey(g.prefixWords[0]));
+}
+function applyGroupNames(g) {
+  g.items.forEach(it => {
+    let n = (g.addPrefix && needsPrefix(it, g)) ? g.prefix + ' ' + it.rawName : it.rawName;
+    n = fixUnits(n).replace(/\b(\S+)\s+\1\b/gi, '$1');   // "IPHONE 16 16 PRO" → "IPHONE 16 PRO"
+    it.name = n;
+    it.key = supKey(n);
+  });
+}
+function supTogglePrefix(gi, v) {
+  if (!supParsed || !supParsed.groups[gi]) return;
+  supParsed.groups[gi].addPrefix = !!v;
+  renderSupplierPreview();
 }
 
 function supPrice(costUsd, rate, margin, step) {
@@ -1942,6 +2042,7 @@ function readPricing() {
 let supParsed = null, supPlan = null;
 
 function showSupplierView() {
+  if (selectMode) exitSelectMode();
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
   ['homeView', 'detailView', 'cartView', 'bulkView'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('supplierView').style.display = 'block';
@@ -1977,8 +2078,10 @@ function supSetGroupCat(i, cat) { if (supParsed && supParsed.groups[i]) supParse
 
 function reconcileSupplier(groups, pr, hideMissing) {
   const bySup = new Map(products.filter(p => p.supplierKey).map(p => [p.supplierKey, p]));
-  const seen = new Set(), rows = [];
+  const seen = new Set(), rows = [], dupes = [], winner = new Map();
+  groups.forEach(g => g.items.forEach(it => { if (winner.has(it.key)) dupes.push(it.name); winner.set(it.key, it); }));
   groups.forEach((g, gi) => g.items.forEach(it => {
+    if (winner.get(it.key) !== it) return;   // repetido: queda el último
     seen.add(it.key);
     const ex = bySup.get(it.key);
     const price = supPrice(it.costUsd, pr.rate, pr.margin, pr.step);
@@ -1993,7 +2096,7 @@ function reconcileSupplier(groups, pr, hideMissing) {
   const missing = hideMissing
     ? products.filter(p => p.supplierKey && p.available !== false && headers.has(p.supplierGroup) && !seen.has(p.supplierKey))
     : [];
-  return { rows, missing };
+  return { rows, missing, dupes };
 }
 
 function parseSupplier() {
@@ -2009,7 +2112,8 @@ function parseSupplier() {
 function renderSupplierPreview() {
   const pr = readPricing(); if (!pr) return;
   const hideMissing = document.getElementById('supHide').checked;
-  const { rows, missing } = reconcileSupplier(supParsed.groups, pr, hideMissing);
+  supParsed.groups.forEach(applyGroupNames);
+  const { rows, missing, dupes } = reconcileSupplier(supParsed.groups, pr, hideMissing);
   supPlan = { rows, missing, pr };
   const n = s => rows.filter(r => r.status === s).length;
   document.getElementById('supCount').innerHTML =
@@ -2018,7 +2122,8 @@ function renderSupplierPreview() {
   const catOpts = document.getElementById('f-cat').innerHTML;
   let body = '';
   supParsed.groups.forEach((g, gi) => {
-    body += `<tr class="sup-group"><td colspan="5">${esc(g.header)} &nbsp;→&nbsp; <select class="sup-cat-sel" data-gi="${gi}" onchange="supSetGroupCat(${gi}, this.value)">${catOpts}</select></td></tr>`;
+    const pfx = g.prefix ? ` &nbsp;·&nbsp; <label style="font-weight:500;letter-spacing:0;font-family:'Inter',sans-serif;color:var(--gris2);cursor:pointer"><input type="checkbox" ${g.addPrefix ? 'checked' : ''} onchange="supTogglePrefix(${gi}, this.checked)"> Agregar «${esc(g.prefix)}» al nombre</label>` : '';
+    body += `<tr class="sup-group"><td colspan="5">${esc(g.header)} &nbsp;→&nbsp; <select class="sup-cat-sel" data-gi="${gi}" onchange="supSetGroupCat(${gi}, this.value)">${catOpts}</select>${pfx}</td></tr>`;
     rows.filter(r => r.gi === gi).forEach(r => {
       const [cls, label] = chip[r.status];
       let was = '—', delta = '';
@@ -2035,7 +2140,8 @@ function renderSupplierPreview() {
   }
   document.getElementById('supPreview').innerHTML = `<table class="bulk-table"><thead><tr><th>Estado</th><th>Producto</th><th>Costo</th><th>Precio nuevo</th><th>Precio actual</th></tr></thead><tbody>${body}</tbody></table>`;
   document.querySelectorAll('.sup-cat-sel').forEach(s => { s.value = supParsed.groups[+s.dataset.gi].cat; });
-  const warn = supParsed.warnings.length ? ' · ' + supParsed.warnings.length + ' repetido(s) ignorado(s)' : '';
+  const nDup = supParsed.warnings.length + dupes.length;
+  const warn = nDup ? ' · ' + nDup + ' repetido(s) ignorado(s)' : '';
   const errs = supParsed.errors.length ? ' · ⚠ ' + supParsed.errors.length + ' línea(s) no se pudieron leer: ' + supParsed.errors.slice(0, 3).join(' | ') : '';
   setSupStatus('✔ REVISÁ LA VISTA PREVIA Y APLICÁ LOS CAMBIOS' + warn + errs, supParsed.errors.length ? 'error' : 'ok');
   const changes = rows.filter(r => r.status !== 'same').length + missing.length;
@@ -2317,6 +2423,111 @@ async function applyDetails() {
   detPlan = null;
 }
 
+/* ── SELECCIÓN MÚLTIPLE Y BORRADO GENERAL (solo admin) ── */
+function updateSelectionBar() {
+  const n = selected.size;
+  const c = document.getElementById('selCount');   if (c) c.textContent = n + (n === 1 ? ' SELECCIONADO' : ' SELECCIONADOS');
+  const v = document.getElementById('selVisible'); if (v) v.textContent = lastFilteredIds.length;
+  const del = document.getElementById('btnSelDelete'); if (del) del.disabled = n === 0;
+  const b = document.getElementById('btnSelectMode');
+  if (b) { b.classList.toggle('on', selectMode); b.textContent = selectMode ? '✕ SALIR DE LA SELECCIÓN' : '☑ SELECCIONAR VARIOS'; }
+}
+
+function toggleSelectMode() { if (selectMode) exitSelectMode(); else enterSelectMode(); }
+
+function enterSelectMode() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  selectMode = true;
+  document.body.classList.add('select-mode');
+  filterProducts();
+}
+
+function exitSelectMode() {
+  selectMode = false;
+  selected.clear();
+  document.body.classList.remove('select-mode');
+  filterProducts();
+}
+
+function toggleSelected(id) {
+  if (selected.has(id)) selected.delete(id); else selected.add(id);
+  const on = selected.has(id);
+  const card = document.querySelector('.product-card[data-id="' + id + '"]');
+  if (card) {
+    card.classList.toggle('selected', on);
+    card.setAttribute('aria-checked', on ? 'true' : 'false');
+    const m = card.querySelector('.sel-mark'); if (m) m.textContent = on ? '✓' : '';
+  }
+  updateSelectionBar();
+}
+
+function selectAllVisible() { lastFilteredIds.forEach(id => selected.add(id)); filterProducts(); }
+function clearSelection()   { selected.clear(); filterProducts(); }
+function selectUnlisted() {
+  let n = 0;
+  lastFilteredIds.forEach(id => { const p = products.find(x => x.id === id); if (p && p.available === false) { selected.add(id); n++; } });
+  if (!n) showToast('NO HAY PRODUCTOS "NO EN LISTA" EN ESTA VISTA');
+  filterProducts();
+}
+
+function askBulkDelete() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  const items = [...selected].map(id => products.find(p => p.id === id)).filter(Boolean);
+  if (!items.length) return;
+  document.getElementById('bdTitle').textContent = 'ELIMINAR ' + items.length + (items.length === 1 ? ' PRODUCTO' : ' PRODUCTOS');
+  document.getElementById('bdList').innerHTML = items.slice(0, 8).map(p => '• ' + esc(p.name)).join('<br>') + (items.length > 8 ? '<br>… y ' + (items.length - 8) + ' más' : '');
+  const need = items.length >= 10;   // con muchos productos se pide escribir ELIMINAR
+  document.getElementById('bdTypeWrap').style.display = need ? 'block' : 'none';
+  document.getElementById('bdType').value = '';
+  document.getElementById('bdConfirm').disabled = need;
+  document.getElementById('bdStatus').textContent = '';
+  document.getElementById('bulkDeleteOverlay').classList.add('open');
+  if (need) setTimeout(() => document.getElementById('bdType').focus(), 100);
+}
+
+function bdTypeCheck() {
+  document.getElementById('bdConfirm').disabled = document.getElementById('bdType').value.trim().toUpperCase() !== 'ELIMINAR';
+}
+
+function closeBulkDelete() { document.getElementById('bulkDeleteOverlay').classList.remove('open'); }
+
+async function confirmBulkDelete() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  const ids = [...selected];
+  if (!ids.length) { closeBulkDelete(); return; }
+  const btn = document.getElementById('bdConfirm');
+  btn.disabled = true;
+  const CHUNK = 200;   // cada producto borra hasta 2 documentos (producto + costo); Firestore admite 500 por lote
+  const deleted = new Set();
+  let failed = 0;
+  for (let i = 0; i < ids.length; i += CHUNK) {
+    const chunk = ids.slice(i, i + CHUNK);
+    document.getElementById('bdStatus').textContent = '⏳ ELIMINANDO... ' + Math.min(i + CHUNK, ids.length) + '/' + ids.length;
+    document.getElementById('bdStatus').className = 'bulk-status loading';
+    try {
+      const batch = db.batch();
+      chunk.forEach(id => {
+        batch.delete(db.collection('products').doc(String(id)));
+        batch.delete(db.collection('costs').doc(String(id)));
+      });
+      await batch.commit();
+      chunk.forEach(id => deleted.add(id));
+    } catch (e) { failed += chunk.length; console.error('Borrado por lote falló:', e); }
+  }
+  products = products.filter(p => !deleted.has(p.id));
+  cart = cart.filter(x => !deleted.has(x.id));
+  updateCartBadge();
+  deleted.forEach(id => selected.delete(id));
+  closeBulkDelete();
+  filterProducts();
+  if (failed) {
+    showToast('⚠ ' + deleted.size + ' ELIMINADOS, ' + failed + ' CON ERROR — ¿SESIÓN ADMIN ACTIVA?');
+    loadData();   // re-sincroniza con la base
+  } else {
+    showToast('🗑 ' + deleted.size + (deleted.size === 1 ? ' PRODUCTO ELIMINADO' : ' PRODUCTOS ELIMINADOS'));
+  }
+}
+
 /* ── RUTEO POR HASH: #/producto/12 · #/carrito · #/ ── */
 function go(hash) {
   if ((location.hash || '#/') === hash) route();   // mismo hash: no hay evento, renderizamos directo
@@ -2345,7 +2556,7 @@ function route() {
 window.addEventListener('hashchange', route);
 
 document.addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[role="button"]')) {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[role="button"], [role="checkbox"]')) {
     e.preventDefault();
     e.target.click();
   }
