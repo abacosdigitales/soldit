@@ -516,6 +516,13 @@ body.admin-mode .btn-masiva { display:inline-block; }
 .sup-group td { background:var(--negro3); color:var(--amarillo); font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.06em; }
 .sup-note { font-size:11px; color:var(--gris3); margin-top:10px; line-height:1.6; }
 .badge-nolist { position:absolute; bottom:8px; right:8px; background:#222230; border:1px solid var(--gris3); color:var(--gris2); font-family:'Rajdhani',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.08em; border-radius:2px; padding:2px 7px; z-index:3; }
+/* ── DETALLES DE PRODUCTO: ficha, garantía, galería ── */
+.detail-specs { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:4px; }
+.detail-specs th { text-align:left; font-weight:600; color:var(--gris2); padding:7px 12px 7px 0; border-bottom:1px solid var(--borde-b); width:42%; vertical-align:top; }
+.detail-specs td { color:var(--blanco); padding:7px 0; border-bottom:1px solid var(--borde-b); vertical-align:top; }
+.detail-thumbs { position:absolute; top:12px; left:12px; right:12px; display:flex; gap:6px; overflow-x:auto; z-index:2; }
+.detail-thumb { width:46px; height:46px; object-fit:cover; border:1px solid var(--borde-b); border-radius:4px; cursor:pointer; opacity:.7; background:var(--negro3); flex:0 0 auto; }
+.detail-thumb:hover, .detail-thumb.active { opacity:1; border-color:var(--amarillo); }
 /* ── ACCESIBILIDAD ── */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:focus-visible { outline:2px solid var(--amarillo); outline-offset:2px; }
 .detail-desc { white-space:pre-line; }
@@ -834,6 +841,26 @@ Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bl
     <div class="bulk-count" id="supCount"></div>
     <div class="bulk-preview" id="supPreview"></div>
     <div class="sup-note">Los precios de los productos del proveedor se recalculan en cada importación: si editás uno a mano, se pisa con la próxima lista. El costo en dólares se guarda aparte y solo lo ve el admin.</div>
+
+    <div class="bulk-header" style="margin-top:40px">DETALLES DE <span>PRODUCTOS</span></div>
+    <p class="bulk-sub">Descripción, ficha técnica, garantía y fotos. Pegá el texto ya estandarizado, con un bloque <code>## NOMBRE</code> por producto: se asocia a cada producto por su nombre y solo se pisan los campos que incluyas.</p>
+    <div class="bulk-box">
+      <label class="bulk-label">📝 Pegá los detalles</label>
+      <textarea class="bulk-textarea" id="detInput" placeholder="## NOMBRE DEL PRODUCTO&#10;Descripción: texto...&#10;Ficha:&#10;- Característica: valor&#10;Garantía: texto...&#10;Fotos: https://... https://..."></textarea>
+      <div class="bulk-format">
+        <strong style="color:var(--gris2)">Campos:</strong> <code>Descripción:</code> <code>Ficha:</code> (una línea <code>- clave: valor</code> por característica) <code>Garantía:</code> <code>Condiciones:</code> <code>Fotos:</code> (links separados por espacio o coma)<br>
+        <strong style="color:var(--gris2)">El nombre</strong> del bloque tiene que ser el mismo que el del producto (no importan mayúsculas ni acentos).
+      </div>
+      <label class="sup-check" style="margin-top:14px"><input type="checkbox" id="detRehost" checked /> Subir las fotos a Cloudinary (recomendado: no dependen del link original)</label>
+    </div>
+    <div class="bulk-actions">
+      <button class="btn-bulk-parse" onclick="parseDetails()">👁 PREVISUALIZAR</button>
+      <button class="btn-bulk-upload" id="btnDetApply" onclick="applyDetails()" style="display:none">✔ APLICAR DETALLES</button>
+      <button class="btn-bulk-clear" onclick="clearDetails()">✕ LIMPIAR</button>
+    </div>
+    <div class="bulk-status" id="detStatus"></div>
+    <div class="bulk-count" id="detCount"></div>
+    <div class="bulk-preview" id="detPreview"></div>
   </div>
 </div>
 
@@ -896,6 +923,7 @@ let editingId  = null;
 let deletingId = null;
 let dataLoaded = false;
 let routed = false;
+let detailImages = [];
 
 /* ── HELPERS (seguridad / imágenes / búsqueda) ── */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1187,6 +1215,8 @@ function saveProduct() {
   };
   if (editingId) {
     const idx = products.findIndex(x => x.id===editingId);
+    const prevImgs = products[idx].images;
+    if (prevImgs && prevImgs.length) data.images = imagen ? [imagen, ...prevImgs.filter(u => u !== imagen)] : [];
     products[idx] = {...products[idx], ...data, sold: products[idx].sold};
     saveProductToFirestore(products[idx]);
     showToast('✔ PRODUCTO ACTUALIZADO');
@@ -1501,13 +1531,18 @@ function _showDetail(id) {
   const hb = document.getElementById('heroBanner'); if(hb) hb.style.display='none';
   // Update meta tags only (no URL manipulation - breaks on GitHub Pages)
   updateMetaTags(p);
-  const imgSrc = cdn(safeUrl(p.imagen), 900);
+  detailImages = ((p.images && p.images.length) ? p.images : [p.imagen]).map(safeUrl).filter(Boolean);
+  const imgSrc = detailImages[0] ? cdn(detailImages[0], 900) : '';
   const imgHtml = imgSrc
-    ? `<img src="${esc(imgSrc)}" alt="${esc(p.name)}" style="max-width:100%;max-height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:100px">${esc(p.emoji)}</span>`
+    ? `<img id="detailMainImg" src="${esc(imgSrc)}" alt="${esc(p.name)}" style="max-width:100%;max-height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:100px">${esc(p.emoji)}</span>`
     : `<span>${esc(p.emoji)}</span>`;
+  const thumbsHtml = detailImages.length > 1
+    ? `<div class="detail-thumbs">${detailImages.map((u, i) => `<img class="detail-thumb${i === 0 ? ' active' : ''}" src="${esc(cdn(u, 120))}" alt="Foto ${i + 1} de ${esc(p.name)}" role="button" tabindex="0" onclick="setDetailImg(${i})">`).join('')}</div>`
+    : '';
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-img-area">
       ${imgHtml}
+      ${thumbsHtml}
       ${p.sold ? '<div class="badge-sold" style="position:absolute;inset:0"><span>VENDIDO</span></div>' : ''}
       <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;">
         ${!p.sold ? `<span class="detail-badge ${p.cond==='new'?'new-b':'used-b'}">${p.cond==='new'?'NUEVO':'USADO'}</span>` : ''}
@@ -1531,8 +1566,9 @@ function _showDetail(id) {
         ${!p.sold && p.stock !== 0 ? `<button class="btn-add-detail" onclick="addToCart(${p.id})">+ AGREGAR AL CARRITO</button>` : ''}
         <button onclick="compartirProducto(${p.id})" style="background:transparent;border:1px solid var(--borde-b);color:var(--gris2);border-radius:4px;padding:10px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;width:100%;">🔗 COMPARTIR PRODUCTO</button>
       </div>
-      <div class="detail-desc-title">DESCRIPCIÓN</div>
-      <div class="detail-desc">${esc(p.desc)}</div>
+      ${p.desc && p.desc !== '—' ? `<div class="detail-desc-title">DESCRIPCIÓN</div>\n      <div class="detail-desc">${esc(p.desc)}</div>` : ''}
+      ${p.specs && p.specs.length ? `<div class="detail-desc-title">FICHA TÉCNICA</div>\n      <table class="detail-specs">${p.specs.map(s => s.v ? `<tr><th>${esc(s.k)}</th><td>${esc(s.v)}</td></tr>` : `<tr><td colspan="2">${esc(s.k)}</td></tr>`).join('')}</table>` : ''}
+      ${p.warranty ? `<div class="detail-desc-title">GARANTÍA Y CONDICIONES</div>\n      <div class="detail-desc">${esc(p.warranty)}</div>` : ''}
     </div>
   `;
   window.scrollTo(0, 0);
@@ -2095,6 +2131,190 @@ async function repriceSupplier() {
   const { ok, failed } = await commitUnits(units);
   filterProducts();
   setSupStatus(failed ? '⚠ ' + ok + ' ACTUALIZADOS, ' + failed + ' CON ERROR' : '✔ ' + ok + ' PRECIOS ACTUALIZADOS', failed ? 'error' : 'ok');
+}
+
+/* ── DETALLES DE PRODUCTOS (descripción, ficha técnica, garantía, fotos) ── */
+function setDetailImg(i) {
+  const main = document.getElementById('detailMainImg');
+  if (!main || !detailImages[i]) return;
+  main.style.display = '';
+  main.src = cdn(detailImages[i], 900);
+  document.querySelectorAll('.detail-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
+}
+
+const DET_LABELS = [
+  ['desc',     /^(descripcion|desc)$/],
+  ['specs',    /^(ficha( tecnica)?|caracteristicas|especificaciones)$/],
+  ['warranty', /^(garantia|condiciones|garantia y condiciones)$/],
+  ['photos',   /^(fotos?|imagenes?)$/]
+];
+
+function parseDetailsText(raw) {
+  const blocks = [], warnings = [];
+  let cur = null, field = null;
+  const feed = (f, s) => {
+    if (f === 'specs') {
+      const b = s.replace(/^[-•*]\s*/, '').trim();
+      const i = b.indexOf(':');
+      if (i > 0) cur.specs.push({ k: b.slice(0, i).trim(), v: b.slice(i + 1).trim() });
+      else if (b) cur.specs.push({ k: b, v: '' });
+    } else if (f === 'photos') {
+      s.split(/[\s,;]+/).forEach(u => { const x = safeUrl(u); if (x && !cur.photos.includes(x)) cur.photos.push(x); });
+    } else {
+      cur[f] = cur[f] ? cur[f] + '\n' + s : s;
+    }
+  };
+  raw.split(/\r?\n/).forEach(line => {
+    const l = line.trim();
+    const h = l.match(/^#{1,3}\s*(.+)$/);
+    if (h) {
+      const name = h[1].replace(/[*_~]/g, '').trim();
+      cur = { name, key: supKey(name), desc: '', specs: [], warranty: '', photos: [] };
+      blocks.push(cur); field = null; return;
+    }
+    if (!cur) return;
+    if (!l) { if (field === 'desc' || field === 'warranty') cur[field] += '\n'; return; }
+    const lm = l.match(/^([^:\-•*#][^:]{1,30}):\s*(.*)$/);
+    const lab = lm && DET_LABELS.find(([, rx]) => rx.test(norm(lm[1]).trim()));
+    if (lab) {
+      field = lab[0];
+      let v = lm[2].trim();
+      const ln = norm(lm[1]).trim();
+      if (field === 'warranty' && v) v = (ln === 'garantia' ? 'Garantía: ' : ln === 'condiciones' ? 'Condiciones: ' : '') + v;
+      if (v) feed(field, v);
+      return;
+    }
+    if (field) feed(field, l);
+  });
+  const byKey = new Map();
+  blocks.forEach(b => {
+    b.desc = b.desc.replace(/\n{3,}/g, '\n\n').trim();
+    b.warranty = b.warranty.replace(/\n{3,}/g, '\n\n').trim();
+    b.specs = b.specs.slice(0, 60);
+    b.photos = b.photos.slice(0, 10);
+    if (byKey.has(b.key)) warnings.push('Repetido: ' + b.name);
+    byKey.set(b.key, b);
+  });
+  const out = [...byKey.values()].filter(b => {
+    const has = b.desc || b.specs.length || b.warranty || b.photos.length;
+    if (!has) warnings.push('Sin datos: ' + b.name);
+    return has;
+  });
+  return { blocks: out, warnings };
+}
+
+function findProductByKey(key) {
+  return products.find(p => p.supplierKey === key) || products.find(p => supKey(p.name) === key);
+}
+function suggestProduct(key) {
+  const kt = new Set(key.split(' '));
+  let best = null, bs = 0;
+  products.forEach(p => {
+    const pt = new Set((p.supplierKey || supKey(p.name)).split(' '));
+    const inter = [...kt].filter(x => pt.has(x)).length;
+    const s = inter / new Set([...kt, ...pt]).size;
+    if (s > bs) { bs = s; best = p; }
+  });
+  return bs >= 0.5 ? best : null;
+}
+
+function setDetStatus(msg, type) {
+  const el = document.getElementById('detStatus');
+  el.textContent = msg;
+  el.className = 'bulk-status' + (type ? ' ' + type : '');
+}
+
+let detPlan = null;
+
+function clearDetails() {
+  detPlan = null;
+  document.getElementById('detInput').value = '';
+  ['detPreview', 'detCount'].forEach(id => document.getElementById(id).innerHTML = '');
+  setDetStatus('', '');
+  document.getElementById('btnDetApply').style.display = 'none';
+}
+
+function parseDetails() {
+  const raw = document.getElementById('detInput').value.trim();
+  if (!raw) { setDetStatus('⚠ PEGÁ LOS DETALLES PRIMERO', 'error'); return; }
+  const { blocks, warnings } = parseDetailsText(raw);
+  if (!blocks.length) { setDetStatus('⚠ NO SE ENCONTRARON BLOQUES CON DATOS (CADA PRODUCTO EMPIEZA CON ## NOMBRE)', 'error'); return; }
+  const rows = blocks.map(b => { const p = findProductByKey(b.key); return { b, p, sug: p ? null : suggestProduct(b.key) }; });
+  detPlan = rows;
+  const found = rows.filter(r => r.p).length, lost = rows.length - found;
+  document.getElementById('detCount').innerHTML = `<span>${found}</span> productos a actualizar · <span>${lost}</span> sin coincidencia`;
+  const cell = (has, replaces) => has ? (replaces ? '↻ reemplaza' : '✔') : '—';
+  const body = rows.map(({ b, p, sug }) => {
+    if (!p) {
+      return `<tr><td><span class="sup-chip hide">NO ENCONTRADO</span></td><td>${esc(b.name)}</td><td colspan="4">${sug ? '¿Quisiste decir <strong style="color:var(--blanco)">' + esc(sug.name) + '</strong>? Corregí el nombre del bloque.' : 'Ningún producto se llama así.'}</td></tr>`;
+    }
+    return `<tr><td><span class="sup-chip upd">ACTUALIZA</span></td><td>${esc(p.name)}</td>
+      <td>${cell(b.desc, p.desc && p.desc !== '—')}</td>
+      <td>${b.specs.length ? b.specs.length + ' ítems' + (p.specs && p.specs.length ? ' (reemplaza)' : '') : '—'}</td>
+      <td>${cell(b.warranty, p.warranty)}</td>
+      <td>${b.photos.length ? b.photos.length + (p.images && p.images.length ? ' (reemplaza)' : '') : '—'}</td></tr>`;
+  }).join('');
+  document.getElementById('detPreview').innerHTML = `<table class="bulk-table"><thead><tr><th>Estado</th><th>Producto</th><th>Descripción</th><th>Ficha</th><th>Garantía</th><th>Fotos</th></tr></thead><tbody>${body}</tbody></table>`;
+  setDetStatus('✔ REVISÁ LA VISTA PREVIA Y APLICÁ' + (warnings.length ? ' · ⚠ ' + warnings.slice(0, 3).join(' | ') : ''), warnings.length || lost ? 'error' : 'ok');
+  document.getElementById('btnDetApply').style.display = found ? 'inline-block' : 'none';
+}
+
+// Copia la foto a Cloudinary a partir de su link (así no depende del sitio original)
+async function rehostImage(url) {
+  if (/^https:\/\/res\.cloudinary\.com\//.test(url)) return url;
+  const fd = new FormData();
+  fd.append('file', url);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000);
+  try {
+    const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd, signal: ctrl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (!j.secure_url) throw new Error('sin secure_url');
+    return j.secure_url;
+  } finally { clearTimeout(timer); }
+}
+
+async function applyDetails() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  if (!detPlan) return;
+  const btn = document.getElementById('btnDetApply');
+  btn.disabled = true;
+  const rehost = document.getElementById('detRehost').checked;
+  const units = [];
+  let photoFail = 0, done = 0;
+  const matched = detPlan.filter(r => r.p);
+  for (const { b, p } of matched) {
+    const patch = {};
+    if (b.desc) patch.desc = b.desc;
+    if (b.specs.length) patch.specs = b.specs;
+    if (b.warranty) patch.warranty = b.warranty;
+    if (b.photos.length) {
+      let urls = b.photos;
+      if (rehost) {
+        urls = [];
+        for (const u of b.photos) {
+          setDetStatus('⏳ SUBIENDO FOTOS... ' + p.name, 'loading');
+          try { urls.push(await rehostImage(u)); } catch (e) { console.error('Foto no subida:', u, e); photoFail++; urls.push(u); }
+        }
+      }
+      patch.images = urls;
+      patch.imagen = urls[0];
+    }
+    if (Object.keys(patch).length) units.push({ ex: p, cost: null, patch });
+    done++;
+  }
+  setDetStatus('⏳ GUARDANDO...', 'loading');
+  const { ok, failed } = await commitUnits(units);
+  filterProducts();
+  btn.disabled = false;
+  if (failed) { setDetStatus('⚠ ' + ok + ' ACTUALIZADOS, ' + failed + ' CON ERROR — REVISÁ LAS REGLAS Y VOLVÉ A INTENTAR', 'error'); return; }
+  setDetStatus('✔ DETALLES CARGADOS EN ' + ok + ' PRODUCTOS' + (photoFail ? ' · ⚠ ' + photoFail + ' FOTO(S) NO SE PUDIERON SUBIR A CLOUDINARY (SE DEJÓ EL LINK ORIGINAL)' : ''), photoFail ? 'error' : 'ok');
+  document.getElementById('detPreview').innerHTML = '';
+  document.getElementById('detCount').innerHTML = '';
+  btn.style.display = 'none';
+  detPlan = null;
 }
 
 /* ── RUTEO POR HASH: #/producto/12 · #/carrito · #/ ── */
