@@ -504,6 +504,18 @@ body.admin-mode .admin-active-badge { display:flex; }
 .btn-masiva { display:none; background:transparent; border:1px solid var(--borde-b); color:var(--gris3); border-radius:4px; padding:5px 10px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.06em; cursor:pointer; white-space:nowrap; transition:all .2s; }
 .btn-masiva:hover { border-color:var(--amarillo); color:var(--amarillo); }
 body.admin-mode .btn-masiva { display:inline-block; }
+/* ── LISTA DE PROVEEDOR ── */
+.sup-params { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+.sup-params label { display:flex; flex-direction:column; gap:6px; font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--gris2); }
+.sup-params input, .sup-params select, .sup-cat-sel { background:var(--negro3); border:1px solid var(--borde-b); border-radius:5px; padding:9px 12px; color:var(--blanco); font-family:'Inter',sans-serif; font-size:14px; min-width:150px; outline:none; }
+.sup-params input:focus, .sup-params select:focus, .sup-cat-sel:focus { border-color:var(--amarillo); }
+.sup-check { flex-direction:row !important; align-items:center; gap:8px !important; text-transform:none !important; font-size:12px !important; letter-spacing:0 !important; font-family:'Inter',sans-serif !important; font-weight:500 !important; margin-top:20px; }
+.sup-check input { min-width:0 !important; width:auto; }
+.sup-chip { font-family:'Rajdhani',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.08em; padding:2px 7px; border-radius:2px; border:1px solid currentColor; white-space:nowrap; }
+.sup-chip.new { color:var(--azul); } .sup-chip.upd { color:var(--amarillo); } .sup-chip.back { color:#25d366; } .sup-chip.same { color:var(--gris3); } .sup-chip.hide { color:var(--rojo); }
+.sup-group td { background:var(--negro3); color:var(--amarillo); font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.06em; }
+.sup-note { font-size:11px; color:var(--gris3); margin-top:10px; line-height:1.6; }
+.badge-nolist { position:absolute; bottom:8px; right:8px; background:#222230; border:1px solid var(--gris3); color:var(--gris2); font-family:'Rajdhani',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.08em; border-radius:2px; padding:2px 7px; z-index:3; }
 /* ── ACCESIBILIDAD ── */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:focus-visible { outline:2px solid var(--amarillo); outline-offset:2px; }
 .detail-desc { white-space:pre-line; }
@@ -532,6 +544,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
         ADMIN ACTIVO — CERRAR
       </button>
       <button class="btn-masiva" id="btnMasiva" onclick="showBulkView()">⬆ MASIVA</button>
+      <button class="btn-masiva" id="btnProveedor" onclick="showSupplierView()">📋 PROVEEDOR</button>
       <button class="admin-nav-btn" id="adminFab" aria-label="Panel administrador" onclick="toggleAdminPanel()" title="Panel administrador">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </button>
@@ -780,6 +793,50 @@ Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bl
     </div>
   </div>
 
+<!-- LISTA DE PROVEEDOR -->
+<div id="supplierView" style="display:none;">
+  <div class="bulk-view">
+    <div class="bulk-header">LISTA DE <span>PROVEEDOR</span></div>
+    <p class="bulk-sub">Pegá el mensaje de WhatsApp con la lista. Los precios (en dólares) se convierten a pesos con tu cotización y tu margen. Lo que ya no figura en la lista deja de mostrarse al público, y vuelve a aparecer si reaparece en una lista futura.</p>
+    <div class="bulk-box">
+      <div class="sup-params">
+        <label>Cotización (ARS por USD)
+          <input type="number" id="supRate" min="0" step="any" placeholder="Ej: 1200" />
+        </label>
+        <label>Margen (%)
+          <input type="number" id="supMargin" min="0" step="any" placeholder="Ej: 15" />
+        </label>
+        <label>Redondear hacia arriba a
+          <select id="supRound">
+            <option value="1">Sin redondeo</option>
+            <option value="100">Múltiplos de $100</option>
+            <option value="500">Múltiplos de $500</option>
+            <option value="1000" selected>Múltiplos de $1.000</option>
+            <option value="5000">Múltiplos de $5.000</option>
+          </select>
+        </label>
+        <label class="sup-check"><input type="checkbox" id="supHide" checked /> Ocultar lo que ya no figura en la lista</label>
+      </div>
+      <label class="bulk-label">📋 Pegá la lista del proveedor</label>
+      <textarea class="bulk-textarea" id="supInput" placeholder="PARLANTES JBL&#10;📻 JBL GO 5 |💲60&#10;📻 JBL FLIP 7 |💲115&#10;📻 JBL PARTYBOX 720 |💲950🔥"></textarea>
+      <div class="bulk-format">
+        <strong style="color:var(--gris2)">Formato:</strong> una línea con el nombre de la categoría (<code>PARLANTES JBL</code>) y debajo los productos como <code>nombre |💲precio</code>. Un 🔥 al final marca el producto como destacado.<br>
+        <strong style="color:var(--gris2)">Ocultar faltantes:</strong> solo afecta a las categorías cuyo título aparece en lo que pegás; no toca las que no incluiste.
+      </div>
+    </div>
+    <div class="bulk-actions">
+      <button class="btn-bulk-parse" onclick="parseSupplier()">👁 PREVISUALIZAR</button>
+      <button class="btn-bulk-upload" id="btnSupApply" onclick="applySupplier()" style="display:none">✔ APLICAR CAMBIOS</button>
+      <button class="btn-bulk-clear" onclick="repriceSupplier()" title="Recalcula los precios de todos los productos del proveedor sin necesidad de una lista nueva">↻ RECALCULAR CON ESTA COTIZACIÓN</button>
+      <button class="btn-bulk-clear" onclick="clearSupplier()">✕ LIMPIAR</button>
+    </div>
+    <div class="bulk-status" id="supStatus"></div>
+    <div class="bulk-count" id="supCount"></div>
+    <div class="bulk-preview" id="supPreview"></div>
+    <div class="sup-note">Los precios de los productos del proveedor se recalculan en cada importación: si editás uno a mano, se pisa con la próxima lista. El costo en dólares se guarda aparte y solo lo ve el admin.</div>
+  </div>
+</div>
+
 <!-- ADMIN LOGIN -->
 <div class="login-overlay" id="loginOverlay" onclick="closeLoginOutside(event)">
   <div class="login-box" id="loginBox">
@@ -1021,6 +1078,7 @@ function addToCart(id) {
   const p = products.find(x => x.id===id);
   if (!p) return;
   if (p.sold) { showToast('⚠ ESTE PRODUCTO YA FUE VENDIDO'); return; }
+  if (p.available === false) { showToast('⚠ PRODUCTO NO DISPONIBLE'); return; }
   if (p.stock === 0) { showToast('⚠ SIN STOCK DISPONIBLE'); return; }
   const ex = cart.find(x => x.id===id);
   if (p.stock != null && ex && ex.qty >= p.stock) { showToast('⚠ NO HAY MÁS UNIDADES DISPONIBLES'); return; }
@@ -1067,7 +1125,7 @@ function openModal(id = null) {
       status.className = 'upload-status success';
       status.textContent = '✔ IMAGEN CARGADA';
     }
-    document.getElementById('f-stock').value      = p.stock !== undefined ? p.stock : 1;
+    document.getElementById('f-stock').value      = p.stock != null ? p.stock : (p.supplierKey ? '' : 1);
   } else {
     title.innerHTML = '+ AGREGAR <span>PRODUCTO</span>';
     clearForm();
@@ -1110,7 +1168,9 @@ function saveProduct() {
   const vendedor = document.getElementById('f-vendedor').value.trim();
   const desc     = document.getElementById('f-desc').value.trim();
   const imagen   = document.getElementById('f-imagen').value.trim();
-  const stock    = parseInt(document.getElementById('f-stock').value) || 0;
+  const stockRaw = document.getElementById('f-stock').value;
+  const prevProd = editingId ? products.find(x => x.id === editingId) : null;
+  const stock    = (stockRaw === '' && prevProd && prevProd.supplierKey) ? null : (parseInt(stockRaw) || 0);
 
   if (!nombre || !vendedor || isNaN(precio) || precio <= 0) {
     showToast('⚠ COMPLETÁ LOS CAMPOS OBLIGATORIOS'); return;
@@ -1214,6 +1274,7 @@ function filterProducts() {
   const pr     = prEl.value;
 
   let list = products.filter(p => {
+    if (p.available === false && !isAdmin()) return false;   // fuera de la lista del proveedor
     const mCat  = currentCat === 'all' || p.cat === currentCat;
     const mSrch = !search || norm(p.name).includes(search) || norm(p.seller).includes(search) || norm(p.desc).includes(search);
     const mCond = cond === 'all' || p.cond === cond;
@@ -1224,14 +1285,14 @@ function filterProducts() {
 
   if (sort === 'price-asc')  list.sort((a,b) => a.price-b.price);
   if (sort === 'price-desc') list.sort((a,b) => b.price-a.price);
-  list.sort((a,b) => (a.sold ? 1 : 0) - (b.sold ? 1 : 0)); // los vendidos van al final
+  list.sort((a,b) => ((a.sold || a.available === false) ? 1 : 0) - ((b.sold || b.available === false) ? 1 : 0)); // vendidos y no disponibles al final
 
   const rc = document.getElementById('resultsCount');
   if (rc) rc.textContent = list.length ? list.length+' RESULTADO'+(list.length!==1?'S':'') : '';
 
   // Update hero stat
   const statEl = document.getElementById('statProducts');
-  if (statEl) statEl.textContent = products.filter(p => !p.sold).length;
+  if (statEl) statEl.textContent = products.filter(p => !p.sold && p.available !== false).length;
 
   if (list.length === 0) {
     grid.innerHTML = '';
@@ -1293,8 +1354,14 @@ function renderProducts(list) {
     } else {
       const condBadge = document.createElement('span');
       condBadge.className = p.cond === 'new' ? 'badge-new' : 'badge-used';
-      condBadge.textContent = p.cond === 'new' ? 'NUEVO' : 'USADO';
+      condBadge.textContent = (p.cond === 'new' ? 'NUEVO' : 'USADO') + (p.hot ? ' 🔥' : '');
       imgDiv.appendChild(condBadge);
+      if (p.available === false) {
+        const nl = document.createElement('span');
+        nl.className = 'badge-nolist';
+        nl.textContent = 'NO EN LISTA';
+        imgDiv.appendChild(nl);
+      }
       if (p.origPrice) {
         const ofBadge = document.createElement('span');
         ofBadge.className = 'badge-offer';
@@ -1455,9 +1522,10 @@ function _showDetail(id) {
       <div class="detail-price" style="${p.sold ? 'color:var(--gris3)' : ''}">$${p.price.toLocaleString('es-AR')}</div>
       <div class="detail-cuotas">${p.cuotas ? p.cuotas+' cuotas sin interés de $'+Math.round(p.price/p.cuotas).toLocaleString('es-AR') : 'Pago en efectivo / transferencia'}</div>
       <div class="detail-ship">${p.shipping ? '▲ ENVÍO GRATIS A TODO EL PAÍS' : '◎ ENVÍO A ACORDAR CON EL VENDEDOR'}</div>
-      ${!p.sold && p.stock !== undefined ? `<div style="font-size:13px;${p.stock===0?'color:var(--rojo)':p.stock<=3?'color:var(--rojo)':'color:var(--gris2)'}">
+      ${!p.sold && p.stock != null ? `<div style="font-size:13px;${p.stock===0?'color:var(--rojo)':p.stock<=3?'color:var(--rojo)':'color:var(--gris2)'}">
         ${p.stock===0 ? '⚠ SIN STOCK' : p.stock<=3 ? `⚠ ÚLTIMAS ${p.stock} UNIDADES` : `Stock disponible: ${p.stock}`}
       </div>` : ''}
+      ${p.available === false ? `<div style="font-size:12px;color:var(--rojo)">NO FIGURA EN LA ÚLTIMA LISTA — OCULTO AL PÚBLICO</div>` : ''}
       <div class="detail-actions">
         ${!p.sold ? `<button class="btn-wa-detail" onclick="consultarWA(${p.id})">${waIcon} CONSULTAR POR WHATSAPP</button>` : ''}
         ${!p.sold && p.stock !== 0 ? `<button class="btn-add-detail" onclick="addToCart(${p.id})">+ AGREGAR AL CARRITO</button>` : ''}
@@ -1476,6 +1544,7 @@ function _showHome() {
   const bulkV = document.getElementById('bulkView'); if(bulkV) bulkV.style.display='none';
   const hb3 = document.getElementById('heroBanner'); if(hb3) hb3.style.display='';
   updateMetaTags(null);
+  filterProducts();
 }
 
 /* ── CART ── */
@@ -1639,7 +1708,7 @@ const catEmojisMap = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'�
 
 function showBulkView() {
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
-  ['homeView','detailView','cartView'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['homeView','detailView','cartView','supplierView'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('bulkView').style.display = 'block';
   const hb = document.getElementById('heroBanner'); if(hb) hb.style.display='none';
 }
@@ -1749,6 +1818,285 @@ function setBulkStatus(msg, type) {
   el.className = 'bulk-status' + (type ? ' '+type : '');
 }
 
+/* ── LISTAS DE PROVEEDOR (WhatsApp → catálogo) ── */
+const SUP_CAT_RULES = [
+  ['smartphone', /celular|smartphone|iphone|galaxy|xiaomi|redmi|motorola|\bmoto\b|telefono/],
+  ['laptop', /notebook|laptop|macbook|portatil/],
+  ['gaming', /consola|playstation|\bps[45]\b|xbox|nintendo|joystick|gamer|gaming|videojuego/],
+  ['audio', /parlante|auricular|airpod|headphone|soundbar|audio|bocina|speaker/],
+  ['tablet', /tablet|ipad/],
+  ['camara', /camara|gopro|drone/],
+  ['monitor', /monitor|pantalla|\btv\b|televisor/],
+  ['wearable', /watch|reloj|\bband\b|wearable/],
+  ['impresora', /impresora|printer|toner|cartucho/],
+  ['cable', /cable|adaptador|\bhub\b/],
+  ['almacenamiento', /pendrive|disco|\bssd\b|\bhdd\b|memoria|micro ?sd|almacenamiento/],
+  ['periferico', /mouse|teclado|periferico|webcam/],
+  ['redes', /router|redes|wifi|modem|access point/],
+  ['bateria', /bateria|power ?bank|cargador/],
+  ['microfono', /microfono|\bmic\b/],
+  ['hardware', /placa|procesador|\bram\b|motherboard|fuente|gabinete|hardware|\bgpu\b/]
+];
+function guessCat(header) {
+  const h = norm(header);
+  for (const [cat, rx] of SUP_CAT_RULES) if (rx.test(h)) return cat;
+  return 'accesorio';
+}
+const supKey = n => norm(n).replace(/[^a-z0-9]+/g, ' ').trim();
+const money = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+function parseSupplierNumber(s) {
+  s = s.replace(/[.,]+$/, '');
+  if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) return parseFloat(s.replace(/\./g, '').replace(',', '.'));   // 1.310,50
+  if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) return parseFloat(s.replace(/,/g, ''));                        // 1,310.50
+  return parseFloat(s.replace(',', '.'));
+}
+
+function parseSupplierText(raw) {
+  const groups = [], errors = [], warnings = [];
+  let cur = null;
+  const clean = s => s.replace(/[*_~]/g, '').replace(/^[^\p{L}\p{N}]+/u, '').replace(/[^\p{L}\p{N})\]+.%]+$/u, '').replace(/\s+/g, ' ').trim();
+  raw.split(/\r?\n/).forEach((line, i) => {
+    const l = line.trim();
+    if (!l) return;
+    if (!l.includes('|')) {                                   // línea sin "|": título de categoría
+      const h = clean(l);
+      if (h) { cur = { header: h, key: supKey(h), cat: guessCat(h), items: [] }; groups.push(cur); }
+      return;
+    }
+    const k = l.lastIndexOf('|');
+    const name = clean(l.slice(0, k));
+    const right = l.slice(k + 1);
+    const m = right.match(/\d[\d.,]*/);
+    const price = m ? parseSupplierNumber(m[0]) : NaN;
+    if (!name || !isFinite(price) || price <= 0) { errors.push('Línea ' + (i + 1) + ': "' + l.slice(0, 60) + '"'); return; }
+    if (!cur) { cur = { header: 'SIN CATEGORÍA', key: 'sin categoria', cat: 'accesorio', items: [] }; groups.push(cur); }
+    cur.items.push({ name, key: supKey(name), costUsd: price, hot: right.includes('🔥') });
+  });
+  // un mismo producto repetido: queda el último
+  const seen = new Map();
+  groups.forEach(g => g.items.forEach(it => {
+    if (seen.has(it.key)) { warnings.push('Repetido: ' + it.name); seen.get(it.key).dup = true; }
+    seen.set(it.key, it);
+  }));
+  groups.forEach(g => { g.items = g.items.filter(it => !it.dup); });
+  return { groups: groups.filter(g => g.items.length), errors, warnings };
+}
+
+function supPrice(costUsd, rate, margin, step) {
+  const raw = costUsd * rate * (1 + margin / 100);
+  return step > 1 ? Math.ceil(raw / step) * step : Math.round(raw);
+}
+
+function setSupStatus(msg, type) {
+  const el = document.getElementById('supStatus');
+  el.textContent = msg;
+  el.className = 'bulk-status' + (type ? ' ' + type : '');
+}
+
+function readPricing() {
+  const rate = parseFloat(document.getElementById('supRate').value);
+  const margin = parseFloat(document.getElementById('supMargin').value);
+  const step = parseInt(document.getElementById('supRound').value) || 1;
+  if (!isFinite(rate) || rate <= 0) { setSupStatus('⚠ INGRESÁ LA COTIZACIÓN (ARS POR USD)', 'error'); return null; }
+  if (!isFinite(margin) || margin < 0) { setSupStatus('⚠ INGRESÁ EL MARGEN (0 O MÁS)', 'error'); return null; }
+  return { rate, margin, step };
+}
+
+let supParsed = null, supPlan = null;
+
+function showSupplierView() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  ['homeView', 'detailView', 'cartView', 'bulkView'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('supplierView').style.display = 'block';
+  const hb = document.getElementById('heroBanner'); if (hb) hb.style.display = 'none';
+  window.scrollTo(0, 0);
+  loadPricingConfig();
+}
+
+async function loadPricingConfig() {
+  try {
+    const snap = await db.collection('config').doc('pricing').get();
+    if (snap.exists) {
+      const c = snap.data();
+      if (c.rate)   document.getElementById('supRate').value = c.rate;
+      if (c.margin != null) document.getElementById('supMargin').value = c.margin;
+      if (c.step)   document.getElementById('supRound').value = String(c.step);
+    }
+  } catch (e) {
+    console.error('config/pricing:', e);
+    setSupStatus('⚠ NO SE PUDO LEER LA CONFIGURACIÓN — REVISÁ LAS REGLAS DE FIRESTORE (config y costs)', 'error');
+  }
+}
+
+function clearSupplier() {
+  supParsed = null; supPlan = null;
+  document.getElementById('supInput').value = '';
+  ['supPreview', 'supCount'].forEach(id => document.getElementById(id).innerHTML = '');
+  setSupStatus('', '');
+  document.getElementById('btnSupApply').style.display = 'none';
+}
+
+function supSetGroupCat(i, cat) { if (supParsed && supParsed.groups[i]) supParsed.groups[i].cat = cat; }
+
+function reconcileSupplier(groups, pr, hideMissing) {
+  const bySup = new Map(products.filter(p => p.supplierKey).map(p => [p.supplierKey, p]));
+  const seen = new Set(), rows = [];
+  groups.forEach((g, gi) => g.items.forEach(it => {
+    seen.add(it.key);
+    const ex = bySup.get(it.key);
+    const price = supPrice(it.costUsd, pr.rate, pr.margin, pr.step);
+    let status = 'new';
+    if (ex) {
+      if (ex.available === false) status = 'back';
+      else status = (ex.price === price && !!ex.hot === it.hot && ex.supplierGroup === g.key) ? 'same' : 'upd';
+    }
+    rows.push({ gi, it, price, ex, status });
+  }));
+  const headers = new Set(groups.map(g => g.key));
+  const missing = hideMissing
+    ? products.filter(p => p.supplierKey && p.available !== false && headers.has(p.supplierGroup) && !seen.has(p.supplierKey))
+    : [];
+  return { rows, missing };
+}
+
+function parseSupplier() {
+  const pr = readPricing(); if (!pr) return;
+  const raw = document.getElementById('supInput').value.trim();
+  if (!raw) { setSupStatus('⚠ PEGÁ LA LISTA PRIMERO', 'error'); return; }
+  const res = parseSupplierText(raw);
+  if (!res.groups.length) { setSupStatus('⚠ NO SE ENCONTRARON PRODUCTOS (FORMATO: nombre |💲precio)', 'error'); return; }
+  supParsed = res;
+  renderSupplierPreview();
+}
+
+function renderSupplierPreview() {
+  const pr = readPricing(); if (!pr) return;
+  const hideMissing = document.getElementById('supHide').checked;
+  const { rows, missing } = reconcileSupplier(supParsed.groups, pr, hideMissing);
+  supPlan = { rows, missing, pr };
+  const n = s => rows.filter(r => r.status === s).length;
+  document.getElementById('supCount').innerHTML =
+    `<span>${n('new')}</span> nuevos · <span>${n('upd')}</span> con cambios · <span>${n('back')}</span> vuelven · <span>${n('same')}</span> sin cambios · <span>${missing.length}</span> se ocultan`;
+  const chip = { new: ['new', 'NUEVO'], upd: ['upd', 'ACTUALIZA'], back: ['back', 'VUELVE'], same: ['same', 'SIN CAMBIOS'] };
+  const catOpts = document.getElementById('f-cat').innerHTML;
+  let body = '';
+  supParsed.groups.forEach((g, gi) => {
+    body += `<tr class="sup-group"><td colspan="5">${esc(g.header)} &nbsp;→&nbsp; <select class="sup-cat-sel" data-gi="${gi}" onchange="supSetGroupCat(${gi}, this.value)">${catOpts}</select></td></tr>`;
+    rows.filter(r => r.gi === gi).forEach(r => {
+      const [cls, label] = chip[r.status];
+      let was = '—', delta = '';
+      if (r.ex && r.status !== 'new') {
+        was = money(r.ex.price);
+        if (r.ex.price && r.ex.price !== r.price) delta = ` <span style="color:${r.price > r.ex.price ? 'var(--rojo)' : '#25d366'}">${r.price > r.ex.price ? '▲' : '▼'} ${Math.abs((r.price - r.ex.price) / r.ex.price * 100).toFixed(1)}%</span>`;
+      }
+      body += `<tr><td><span class="sup-chip ${cls}">${label}</span></td><td>${esc(r.it.name)}${r.it.hot ? ' 🔥' : ''}</td><td>US$ ${r.it.costUsd.toLocaleString('es-AR')}</td><td><strong style="color:var(--blanco)">${money(r.price)}</strong>${delta}</td><td>${was}</td></tr>`;
+    });
+  });
+  if (missing.length) {
+    body += `<tr class="sup-group"><td colspan="5">YA NO ESTÁN EN LA LISTA — SE OCULTAN AL PÚBLICO (${missing.length})</td></tr>`;
+    missing.forEach(p => { body += `<tr><td><span class="sup-chip hide">SE OCULTA</span></td><td>${esc(p.name)}</td><td colspan="3">${money(p.price)}</td></tr>`; });
+  }
+  document.getElementById('supPreview').innerHTML = `<table class="bulk-table"><thead><tr><th>Estado</th><th>Producto</th><th>Costo</th><th>Precio nuevo</th><th>Precio actual</th></tr></thead><tbody>${body}</tbody></table>`;
+  document.querySelectorAll('.sup-cat-sel').forEach(s => { s.value = supParsed.groups[+s.dataset.gi].cat; });
+  const warn = supParsed.warnings.length ? ' · ' + supParsed.warnings.length + ' repetido(s) ignorado(s)' : '';
+  const errs = supParsed.errors.length ? ' · ⚠ ' + supParsed.errors.length + ' línea(s) no se pudieron leer: ' + supParsed.errors.slice(0, 3).join(' | ') : '';
+  setSupStatus('✔ REVISÁ LA VISTA PREVIA Y APLICÁ LOS CAMBIOS' + warn + errs, supParsed.errors.length ? 'error' : 'ok');
+  const changes = rows.filter(r => r.status !== 'same').length + missing.length;
+  document.getElementById('btnSupApply').style.display = (changes || rows.length) ? 'inline-block' : 'none';
+}
+
+async function commitUnits(units) {
+  const CHUNK = 200;   // cada unidad escribe hasta 2 documentos; Firestore admite 500 por lote
+  let ok = 0, failed = 0;
+  for (let i = 0; i < units.length; i += CHUNK) {
+    const chunk = units.slice(i, i + CHUNK);
+    try {
+      const batch = db.batch();
+      chunk.forEach(u => {
+        if (u.prod) batch.set(db.collection('products').doc(String(u.prod.id)), u.prod);
+        else if (u.patch) batch.update(db.collection('products').doc(String(u.ex.id)), u.patch);
+        if (u.cost) batch.set(db.collection('costs').doc(String(u.prod ? u.prod.id : u.ex.id)), u.cost);
+      });
+      await batch.commit();
+      chunk.forEach(u => {
+        if (u.prod) { products.push(u.prod); nextId = Math.max(nextId, u.prod.id + 1); }
+        else if (u.patch) Object.assign(u.ex, u.patch);
+      });
+      ok += chunk.length;
+    } catch (e) { failed += chunk.length; console.error('Lote falló:', e); }
+  }
+  return { ok, failed };
+}
+
+async function applySupplier() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  if (!supPlan || !supParsed) return;
+  const btn = document.getElementById('btnSupApply');
+  btn.disabled = true;
+  setSupStatus('⏳ GUARDANDO...', 'loading');
+  const { rows, missing, pr } = supPlan;
+  try {   // guarda cotización y margen; si las reglas no permiten "config", frenamos antes de tocar productos
+    await db.collection('config').doc('pricing').set({ rate: pr.rate, margin: pr.margin, step: pr.step, updatedAt: Date.now() });
+  } catch (e) {
+    console.error(e);
+    setSupStatus('⚠ NO SE PUDO GUARDAR LA CONFIGURACIÓN — ACTUALIZÁ LAS REGLAS DE FIRESTORE (config y costs)', 'error');
+    btn.disabled = false; return;
+  }
+  let idc = nextId;
+  const units = [];
+  rows.forEach(r => {
+    const g = supParsed.groups[r.gi];
+    const cost = { key: r.it.key, group: g.key, costUsd: r.it.costUsd, updatedAt: Date.now() };
+    if (!r.ex) {
+      units.push({ cost, prod: {
+        id: idc++, name: r.it.name, cat: g.cat, cond: 'new', emoji: catEmojisMap[g.cat] || '📦',
+        imagen: null, price: r.price, origPrice: null, cuotas: null, seller: 'Sold-It TechMarket',
+        shipping: false, stock: null, sold: false, desc: '—', features: {}, rating: null, reviews: 0,
+        supplierKey: r.it.key, supplierGroup: g.key, hot: r.it.hot, available: true
+      } });
+    } else {
+      units.push({ ex: r.ex, cost, patch: r.status === 'same' ? null : { price: r.price, hot: r.it.hot, available: true, supplierGroup: g.key } });
+    }
+  });
+  missing.forEach(p => units.push({ ex: p, cost: null, patch: { available: false } }));
+  const { ok, failed } = await commitUnits(units);
+  filterProducts();
+  btn.disabled = false;
+  if (failed) { setSupStatus('⚠ ' + ok + ' OK, ' + failed + ' CON ERROR — REVISÁ LAS REGLAS Y VOLVÉ A INTENTAR', 'error'); return; }
+  setSupStatus('✔ LISTO: ' + rows.filter(r => r.status === 'new').length + ' NUEVOS · ' + rows.filter(r => r.status === 'upd' || r.status === 'back').length + ' ACTUALIZADOS · ' + missing.length + ' OCULTOS', 'ok');
+  document.getElementById('supPreview').innerHTML = '';
+  document.getElementById('supCount').innerHTML = '';
+  btn.style.display = 'none';
+  supPlan = null;
+}
+
+// Recalcula precios con la cotización/margen actuales usando los costos guardados (sin lista nueva)
+async function repriceSupplier() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  const pr = readPricing(); if (!pr) return;
+  setSupStatus('⏳ LEYENDO COSTOS...', 'loading');
+  let costs = {};
+  try {
+    const snap = await db.collection('costs').get();
+    snap.forEach(d => { costs[d.id] = d.data(); });
+  } catch (e) {
+    console.error(e);
+    setSupStatus('⚠ NO SE PUDIERON LEER LOS COSTOS — REVISÁ LAS REGLAS DE FIRESTORE (costs)', 'error'); return;
+  }
+  const units = [];
+  products.filter(p => p.supplierKey && costs[String(p.id)]).forEach(p => {
+    const price = supPrice(costs[String(p.id)].costUsd, pr.rate, pr.margin, pr.step);
+    if (price !== p.price) units.push({ ex: p, cost: null, patch: { price } });
+  });
+  if (!units.length) { setSupStatus('✔ LOS PRECIOS YA ESTÁN AL DÍA CON ESA COTIZACIÓN Y MARGEN', 'ok'); return; }
+  if (!confirm('Se van a recalcular ' + units.length + ' precios con cotización ' + pr.rate + ' y margen ' + pr.margin + '%.\nLos precios editados a mano en productos del proveedor se pisan. ¿Continuar?')) { setSupStatus('', ''); return; }
+  try { await db.collection('config').doc('pricing').set({ rate: pr.rate, margin: pr.margin, step: pr.step, updatedAt: Date.now() }); } catch (e) { console.error(e); }
+  const { ok, failed } = await commitUnits(units);
+  filterProducts();
+  setSupStatus(failed ? '⚠ ' + ok + ' ACTUALIZADOS, ' + failed + ' CON ERROR' : '✔ ' + ok + ' PRECIOS ACTUALIZADOS', failed ? 'error' : 'ok');
+}
+
 /* ── RUTEO POR HASH: #/producto/12 · #/carrito · #/ ── */
 function go(hash) {
   if ((location.hash || '#/') === hash) route();   // mismo hash: no hay evento, renderizamos directo
@@ -1760,11 +2108,12 @@ function showDetail(id) { go('#/producto/' + id); }
 
 function route() {
   if (!dataLoaded) return;                          // se vuelve a llamar al terminar loadData()
+  ['bulkView', 'supplierView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
   const h = location.hash || '#/';
   const m = h.match(/^#(?:\/producto\/|producto-)(\d+)$/);
   if (m) {
     const id = parseInt(m[1], 10);
-    if (products.some(p => p.id === id)) { _showDetail(id); return; }
+    if (products.some(p => p.id === id && (p.available !== false || isAdmin()))) { _showDetail(id); return; }
     showToast('⚠ ESE PRODUCTO YA NO ESTÁ DISPONIBLE');
     history.replaceState(null, '', location.pathname + location.search + '#/');
     _showHome();
