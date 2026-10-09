@@ -538,6 +538,7 @@ body.select-mode .wa-fab, body.select-mode .admin-fab { display:none !important;
 .sel-count { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:var(--amarillo); letter-spacing:0.08em; margin-right:auto; }
 .sel-btn { background:transparent; border:1px solid var(--borde-b); color:var(--gris2); border-radius:4px; padding:8px 14px; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; cursor:pointer; }
 .sel-btn:hover { border-color:var(--amarillo); color:var(--amarillo); }
+.sel-btn:disabled { opacity:0.35; cursor:not-allowed; border-color:var(--borde-b); color:var(--gris2); }
 .btn-sel-delete { background:var(--rojo); color:#fff; border:none; border-radius:4px; padding:9px 18px; font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; }
 .btn-sel-delete:disabled { opacity:0.35; cursor:not-allowed; }
 .bd-input { width:100%; background:var(--negro3); border:1px solid var(--borde-b); border-radius:5px; padding:10px 12px; color:var(--blanco); font-family:'Inter',sans-serif; font-size:14px; text-align:center; outline:none; }
@@ -814,6 +815,8 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
   <button class="sel-btn" onclick="selectAllVisible()">SELECCIONAR TODOS (<span id="selVisible">0</span>)</button>
   <button class="sel-btn" onclick="selectUnlisted()">SOLO NO EN LISTA</button>
   <button class="sel-btn" onclick="clearSelection()">NINGUNO</button>
+  <button class="sel-btn" id="btnSelHide" onclick="hideSelected()" disabled title="Saca los seleccionados de la vista pública sin borrar nada">🙈 OCULTAR</button>
+  <button class="sel-btn" id="btnSelShow" onclick="showSelected()" disabled title="Vuelve a mostrar al público los seleccionados">👁 MOSTRAR</button>
   <button class="btn-sel-delete" id="btnSelDelete" onclick="askBulkDelete()" disabled>🗑 ELIMINAR</button>
   <button class="sel-btn" onclick="exitSelectMode()">✕ SALIR</button>
 </div>
@@ -851,7 +854,7 @@ Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bl
 <div id="supplierView" style="display:none;">
   <div class="bulk-view">
     <div class="bulk-header">LISTA DE <span>PROVEEDOR</span></div>
-    <p class="bulk-sub">Pegá el mensaje de WhatsApp con la lista. Los precios (en dólares) se convierten a pesos con tu cotización y tu margen. Lo que ya no figura en la lista deja de mostrarse al público, y vuelve a aparecer si reaparece en una lista futura.</p>
+    <p class="bulk-sub">Pegá el mensaje de WhatsApp con la lista. Los precios (en dólares) se convierten a pesos con tu cotización y tu margen. Por defecto no se oculta nada de lo anterior: solo se agregan productos nuevos y se actualizan precios. Si pegás la lista completa, tildá «Ocultar…» para que lo que falta deje de mostrarse (vuelve solo si reaparece en una lista).</p>
     <div class="bulk-box">
       <div class="sup-params">
         <label>Cotización (ARS por USD)
@@ -869,13 +872,13 @@ Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bl
             <option value="5000">Múltiplos de $5.000</option>
           </select>
         </label>
-        <label class="sup-check"><input type="checkbox" id="supHide" checked /> Ocultar lo que ya no figura en la lista</label>
+        <label class="sup-check"><input type="checkbox" id="supHide" /> Ocultar lo que no figura en esta lista (tildalo solo si pegás la lista completa)</label>
       </div>
       <label class="bulk-label">📋 Pegá la lista del proveedor</label>
       <textarea class="bulk-textarea" id="supInput" placeholder="PARLANTES JBL&#10;📻 JBL GO 5 |💲60&#10;📻 JBL FLIP 7 |💲115&#10;📻 JBL PARTYBOX 720 |💲950🔥"></textarea>
       <div class="bulk-format">
         <strong style="color:var(--gris2)">Formato:</strong> una línea con el nombre de la categoría (<code>PARLANTES JBL</code>) y debajo los productos como <code>nombre |💲precio</code>. Un 🔥 al final marca el producto como destacado.<br>
-        <strong style="color:var(--gris2)">Ocultar faltantes:</strong> solo afecta a las categorías cuyo título aparece en lo que pegás; no toca las que no incluiste.
+        <strong style="color:var(--gris2)">Ocultar faltantes (opcional):</strong> si lo tildás, solo afecta a las categorías cuyo título aparece en lo que pegás; no toca las que no incluiste.
       </div>
     </div>
     <div class="bulk-actions">
@@ -1157,7 +1160,7 @@ function addToCart(id) {
   const p = products.find(x => x.id===id);
   if (!p) return;
   if (p.sold) { showToast('⚠ ESTE PRODUCTO YA FUE VENDIDO'); return; }
-  if (p.available === false) { showToast('⚠ PRODUCTO NO DISPONIBLE'); return; }
+  if (isHidden(p)) { showToast('⚠ PRODUCTO NO DISPONIBLE'); return; }
   if (p.stock === 0) { showToast('⚠ SIN STOCK DISPONIBLE'); return; }
   const ex = cart.find(x => x.id===id);
   if (p.stock != null && ex && ex.qty >= p.stock) { showToast('⚠ NO HAY MÁS UNIDADES DISPONIBLES'); return; }
@@ -1355,7 +1358,7 @@ function filterProducts() {
   const pr     = prEl.value;
 
   let list = products.filter(p => {
-    if (p.available === false && !isAdmin()) return false;   // fuera de la lista del proveedor
+    if (isHidden(p) && !isAdmin()) return false;   // oculto por el admin o fuera de la lista del proveedor
     const mCat  = currentCat === 'all' || p.cat === currentCat;
     const mSrch = !search || norm(p.name).includes(search) || norm(p.seller).includes(search) || norm(p.desc).includes(search);
     const mCond = cond === 'all' || p.cond === cond;
@@ -1366,14 +1369,14 @@ function filterProducts() {
 
   if (sort === 'price-asc')  list.sort((a,b) => a.price-b.price);
   if (sort === 'price-desc') list.sort((a,b) => b.price-a.price);
-  list.sort((a,b) => ((a.sold || a.available === false) ? 1 : 0) - ((b.sold || b.available === false) ? 1 : 0)); // vendidos y no disponibles al final
+  list.sort((a,b) => ((a.sold || isHidden(a)) ? 1 : 0) - ((b.sold || isHidden(b)) ? 1 : 0)); // vendidos y ocultos al final
 
   const rc = document.getElementById('resultsCount');
   if (rc) rc.textContent = list.length ? list.length+' RESULTADO'+(list.length!==1?'S':'') : '';
 
   // Update hero stat
   const statEl = document.getElementById('statProducts');
-  if (statEl) statEl.textContent = products.filter(p => !p.sold && p.available !== false).length;
+  if (statEl) statEl.textContent = products.filter(p => !p.sold && !isHidden(p)).length;
 
   if (list.length === 0) {
     grid.innerHTML = '';
@@ -1439,10 +1442,10 @@ function renderProducts(list) {
       condBadge.className = p.cond === 'new' ? 'badge-new' : 'badge-used';
       condBadge.textContent = (p.cond === 'new' ? 'NUEVO' : 'USADO') + (p.hot ? ' 🔥' : '');
       imgDiv.appendChild(condBadge);
-      if (p.available === false) {
+      if (isHidden(p)) {
         const nl = document.createElement('span');
         nl.className = 'badge-nolist';
-        nl.textContent = 'NO EN LISTA';
+        nl.textContent = p.hidden ? 'OCULTO' : 'NO EN LISTA';
         imgDiv.appendChild(nl);
       }
       if (p.origPrice) {
@@ -1630,7 +1633,7 @@ function _showDetail(id) {
       ${!p.sold && p.stock != null ? `<div style="font-size:13px;${p.stock===0?'color:var(--rojo)':p.stock<=3?'color:var(--rojo)':'color:var(--gris2)'}">
         ${p.stock===0 ? '⚠ SIN STOCK' : p.stock<=3 ? `⚠ ÚLTIMAS ${p.stock} UNIDADES` : `Stock disponible: ${p.stock}`}
       </div>` : ''}
-      ${p.available === false ? `<div style="font-size:12px;color:var(--rojo)">NO FIGURA EN LA ÚLTIMA LISTA — OCULTO AL PÚBLICO</div>` : ''}
+      ${isHidden(p) ? `<div style="font-size:12px;color:var(--rojo)">${p.hidden ? 'OCULTO AL PÚBLICO (LO OCULTASTE VOS)' : 'NO FIGURA EN LA ÚLTIMA LISTA — OCULTO AL PÚBLICO'}</div>` : ''}
       <div class="detail-actions">
         ${!p.sold ? `<button class="btn-wa-detail" onclick="consultarWA(${p.id})">${waIcon} CONSULTAR POR WHATSAPP</button>` : ''}
         ${!p.sold && p.stock !== 0 ? `<button class="btn-add-detail" onclick="addToCart(${p.id})">+ AGREGAR AL CARRITO</button>` : ''}
@@ -2094,7 +2097,7 @@ function reconcileSupplier(groups, pr, hideMissing) {
   }));
   const headers = new Set(groups.map(g => g.key));
   const missing = hideMissing
-    ? products.filter(p => p.supplierKey && p.available !== false && headers.has(p.supplierGroup) && !seen.has(p.supplierKey))
+    ? products.filter(p => p.supplierKey && p.available !== false && !p.hidden && headers.has(p.supplierGroup) && !seen.has(p.supplierKey))
     : [];
   return { rows, missing, dupes };
 }
@@ -2131,7 +2134,7 @@ function renderSupplierPreview() {
         was = money(r.ex.price);
         if (r.ex.price && r.ex.price !== r.price) delta = ` <span style="color:${r.price > r.ex.price ? 'var(--rojo)' : '#25d366'}">${r.price > r.ex.price ? '▲' : '▼'} ${Math.abs((r.price - r.ex.price) / r.ex.price * 100).toFixed(1)}%</span>`;
       }
-      body += `<tr><td><span class="sup-chip ${cls}">${label}</span></td><td>${esc(r.it.name)}${r.it.hot ? ' 🔥' : ''}</td><td>US$ ${r.it.costUsd.toLocaleString('es-AR')}</td><td><strong style="color:var(--blanco)">${money(r.price)}</strong>${delta}</td><td>${was}</td></tr>`;
+      body += `<tr><td><span class="sup-chip ${cls}">${label}</span></td><td>${esc(r.it.name)}${r.it.hot ? ' 🔥' : ''}${r.ex && r.ex.hidden ? ' <span class="sup-chip same">OCULTO POR VOS</span>' : ''}</td><td>US$ ${r.it.costUsd.toLocaleString('es-AR')}</td><td><strong style="color:var(--blanco)">${money(r.price)}</strong>${delta}</td><td>${was}</td></tr>`;
     });
   });
   if (missing.length) {
@@ -2429,6 +2432,7 @@ function updateSelectionBar() {
   const c = document.getElementById('selCount');   if (c) c.textContent = n + (n === 1 ? ' SELECCIONADO' : ' SELECCIONADOS');
   const v = document.getElementById('selVisible'); if (v) v.textContent = lastFilteredIds.length;
   const del = document.getElementById('btnSelDelete'); if (del) del.disabled = n === 0;
+  ['btnSelHide', 'btnSelShow'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = n === 0; });
   const b = document.getElementById('btnSelectMode');
   if (b) { b.classList.toggle('on', selectMode); b.textContent = selectMode ? '✕ SALIR DE LA SELECCIÓN' : '☑ SELECCIONAR VARIOS'; }
 }
@@ -2469,6 +2473,23 @@ function selectUnlisted() {
   if (!n) showToast('NO HAY PRODUCTOS "NO EN LISTA" EN ESTA VISTA');
   filterProducts();
 }
+
+function isHidden(p) { return p.available === false || p.hidden === true; }
+
+// Oculta/muestra sin borrar nada: la foto, la ficha y el costo se conservan
+async function setHiddenForSelected(hide) {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  const items = [...selected].map(id => products.find(p => p.id === id)).filter(p => p && (hide ? !p.hidden : isHidden(p)));
+  if (!items.length) { showToast(hide ? 'LOS SELECCIONADOS YA ESTÁN OCULTOS' : 'LOS SELECCIONADOS YA SE VEN'); return; }
+  const patch = hide ? { hidden: true } : { hidden: false, available: true };
+  const { ok, failed } = await commitUnits(items.map(p => ({ ex: p, cost: null, patch: { ...patch } })));
+  selected.clear();
+  filterProducts();
+  if (failed) { showToast('⚠ ' + ok + ' ' + (hide ? 'OCULTOS' : 'VISIBLES') + ', ' + failed + ' CON ERROR — ¿SESIÓN ADMIN ACTIVA?'); loadData(); return; }
+  showToast((hide ? '🙈 ' : '👁 ') + ok + (ok === 1 ? ' PRODUCTO ' : ' PRODUCTOS ') + (hide ? 'OCULTO' : 'VISIBLE') + (ok === 1 ? '' : 'S'));
+}
+function hideSelected() { return setHiddenForSelected(true); }
+function showSelected() { return setHiddenForSelected(false); }
 
 function askBulkDelete() {
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
@@ -2544,7 +2565,7 @@ function route() {
   const m = h.match(/^#(?:\/producto\/|producto-)(\d+)$/);
   if (m) {
     const id = parseInt(m[1], 10);
-    if (products.some(p => p.id === id && (p.available !== false || isAdmin()))) { _showDetail(id); return; }
+    if (products.some(p => p.id === id && (!isHidden(p) || isAdmin()))) { _showDetail(id); return; }
     showToast('⚠ ESE PRODUCTO YA NO ESTÁ DISPONIBLE');
     history.replaceState(null, '', location.pathname + location.search + '#/');
     _showHome();
