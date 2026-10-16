@@ -712,6 +712,96 @@ body.select-mode .wa-fab, body.select-mode .admin-fab { display:none !important;
   .qty-control { grid-area:qty; justify-self:start; }
   .cart-line-total { grid-area:total; min-width:0; }
 }
+/* ── INICIO: botones, franja de confianza ── */
+.hero-banner { flex-wrap:wrap; }
+.hero-cta { display:flex; gap:10px; margin:0 0 20px; flex-wrap:wrap; }
+.hero-btn { height:40px; padding:0 18px; border-radius:999px; border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.04); color:var(--blanco); font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:background .2s, border-color .2s, transform .15s; }
+.hero-btn:hover { background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.3); transform:translateY(-1px); }
+.hero-btn.primary { background:var(--amarillo); border-color:var(--amarillo); color:#14110a; }
+.hero-btn.primary:hover { background:#ffd21a; }
+.trust-strip { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:14px var(--side-pad) 2px; }
+#heroBanner[style*="display: none"] + .trust-strip { display:none; }
+.trust-item { display:flex; align-items:center; gap:11px; padding:11px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.025); text-decoration:none; color:inherit; min-width:0; }
+.trust-item b { display:block; font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:#ececf4; }
+.trust-item small { display:block; font-size:11.5px; color:var(--gris3); line-height:1.35; margin-top:1px; }
+.trust-ico { font-size:22px; flex:0 0 auto; }
+.trust-arrep { border-color:rgba(245,196,0,0.4); background:rgba(245,196,0,0.06); transition:background .2s, border-color .2s; }
+.trust-arrep:hover { background:rgba(245,196,0,0.12); border-color:rgba(245,196,0,0.7); }
+.trust-arrep b { color:var(--amarillo); }
+@media (max-width:900px) { .trust-strip { grid-template-columns:1fr 1fr; } }
+@media (max-width:520px) {
+  .trust-strip { grid-template-columns:1fr 1fr; gap:8px; padding-top:12px; }
+  .trust-item { padding:9px 11px; gap:9px; }
+  .trust-item:nth-child(3) { display:none; }
+  .trust-item:nth-child(-n+2) small { display:none; }
+  .trust-arrep { grid-column:1 / -1; }
+  .trust-ico { font-size:19px; }
+}
+
+/* ── FILTROS NUEVOS ── */
+.filter-check { display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:4px; border:1px solid var(--borde-b); background:var(--negro3); color:var(--gris1); font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.04em; cursor:pointer; user-select:none; }
+.filter-check input { accent-color:var(--amarillo); margin:0; }
+.filter-clear { background:none; border:none; color:var(--amarillo); font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.06em; cursor:pointer; padding:6px 4px; }
+.filter-clear:hover { text-decoration:underline; }
+
+/* ── PÁGINAS LEGALES ── */
+.legal-view { display:none; padding:16px var(--side-pad) 40px; }
+.legal-wrap { max-width:820px; margin:0 auto; }
+.legal-title { font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; letter-spacing:0.02em; margin:4px 0 4px; }
+.legal-updated { font-size:12px; color:var(--gris3); margin-bottom:18px; }
+.legal-lead { font-size:15px; line-height:1.65; color:var(--gris1); margin:10px 0 18px; }
+.legal-sec { margin-top:22px; }
+.legal-sec h2 { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; letter-spacing:0.03em; color:var(--amarillo); margin-bottom:8px; }
+.legal-sec p, .legal-sec li { font-size:14px; line-height:1.7; color:var(--gris1); margin-bottom:8px; }
+.legal-sec ul, .legal-sec ol { padding-left:22px; }
+.legal-view a { color:#7aaeff; }
+.legal-id { display:grid; grid-template-columns:150px 1fr; gap:6px 14px; font-size:14px; padding:14px 16px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; background:rgba(255,255,255,0.025); }
+.legal-id dt { color:var(--gris3); } .legal-id dd { color:var(--blanco); margin:0; word-break:break-word; }
+.legal-admin { background:rgba(255,140,60,0.08); border:1px solid rgba(255,140,60,0.4); color:#ffb070; border-radius:12px; padding:12px 14px; font-size:13px; line-height:1.55; margin:6px 0 14px; }
+.legal-admin code { background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:4px; }
+.legal-fine { font-size:11.5px; color:var(--gris3); line-height:1.6; margin-top:26px; border-top:1px solid rgba(255,255,255,0.07); padding-top:14px; }
+.legal-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:12px; background:rgba(245,196,0,0.1); border:1px solid rgba(245,196,0,0.45); color:var(--amarillo) !important; font-family:'Inter',sans-serif; font-weight:600; font-size:14px; text-decoration:none; }
+.legal-btn:hover { background:rgba(245,196,0,0.18); }
+.rv-form { border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:20px; background:linear-gradient(180deg,#121220,#0d0d18); }
+.rv-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.rv-field { margin-bottom:12px; display:flex; flex-direction:column; gap:6px; }
+.rv-field label { font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--gris1); }
+.rv-field input, .rv-field textarea { background:var(--negro3); border:1px solid var(--borde-b); border-radius:10px; padding:11px 12px; color:var(--blanco); font-family:'Inter',sans-serif; font-size:14px; outline:none; resize:vertical; }
+.rv-field input:focus, .rv-field textarea:focus { border-color:var(--amarillo); }
+.rv-hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.rv-error { color:#ff6b6b; font-size:13px; line-height:1.5; margin:2px 0 8px; }
+.rv-error a { color:#7aaeff; }
+.rv-submit { margin-top:4px; background:var(--amarillo); color:#14110a; }
+.rv-submit:hover { background:#ffd21a; }
+.rv-submit:disabled { opacity:0.6; cursor:wait; }
+.rv-done { border:1px solid rgba(37,211,102,0.4); background:rgba(37,211,102,0.07); border-radius:16px; padding:22px; }
+.rv-done-title { font-size:17px; font-weight:700; color:#43e07f; margin-bottom:12px; }
+.rv-code-label { font-size:12px; color:var(--gris2); }
+.rv-code { font-family:'Rajdhani',sans-serif; font-size:34px; font-weight:700; letter-spacing:0.08em; color:var(--blanco); margin:2px 0 10px; }
+.rv-sum { padding-left:20px; font-size:13.5px; line-height:1.7; color:var(--gris1); margin-bottom:10px; }
+.rv-done p { font-size:14px; line-height:1.65; color:var(--gris1); margin-bottom:8px; }
+.rv-actions { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+@media (max-width:640px) { .rv-row { grid-template-columns:1fr; } .legal-id { grid-template-columns:1fr; } .legal-title { font-size:26px; } }
+
+/* ── CATEGORÍAS, CARRITO Y PIE DE PÁGINA ── */
+.cat-pill { border-radius:999px; padding:6px 15px; border-color:rgba(255,255,255,0.10); background:rgba(255,255,255,0.03); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500; letter-spacing:0.01em; text-transform:none; transition:background .2s, border-color .2s, color .2s; }
+.cat-pill:hover { border-color:rgba(255,255,255,0.28); color:#fff; background:rgba(255,255,255,0.06); }
+.cat-pill.active { border-color:rgba(245,196,0,0.6); color:var(--amarillo); background:rgba(245,196,0,0.09); }
+.cart-btn { border-radius:12px; border-color:rgba(245,196,0,0.35); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:0.02em; text-transform:none; transition:background .2s, border-color .2s; }
+.cart-btn:hover { border-color:rgba(245,196,0,0.6); }
+.back-btn { border-radius:999px; padding:7px 16px; border-color:rgba(255,255,255,0.12); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500; letter-spacing:0.01em; text-transform:none; }
+.site-footer { margin-top:48px; background:linear-gradient(180deg,#0b0b15,#080810); border-top:1px solid rgba(255,255,255,0.07); }
+.footer-inner { gap:36px; }
+.footer-links { gap:44px; }
+.footer-col { gap:9px; }
+.footer-col-title { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--gris2); letter-spacing:0.12em; margin-bottom:6px; }
+.footer-col div, .footer-col a { font-size:13px; color:var(--gris3); text-decoration:none; cursor:pointer; transition:color .2s; line-height:1.4; }
+.footer-col div:hover, .footer-col a:hover { color:var(--blanco); }
+.footer-col a.footer-wa { color:#25d366 !important; }
+.footer-arrep { color:var(--amarillo) !important; font-weight:600; }
+.footer-legal { font-size:11.5px; color:var(--gris3); line-height:1.6; border-top:1px solid rgba(255,255,255,0.06); padding:14px 0 0; }
+.footer-bottom { border-top:1px solid rgba(255,255,255,0.06); margin-top:14px; }
+.co-legal a, .co-fine a { color:#7aaeff; }
 /* ── ACCESIBILIDAD ── */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:focus-visible { outline:2px solid var(--amarillo); outline-offset:2px; }
 .detail-desc { white-space:pre-line; }
@@ -741,6 +831,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
       </button>
       <button class="btn-masiva" id="btnMasiva" onclick="showBulkView()">⬆ MASIVA</button>
       <button class="btn-masiva" id="btnProveedor" onclick="showSupplierView()">📋 PROVEEDOR</button>
+      <button class="btn-masiva" id="btnRevoc" onclick="showRevocView()">📨 ARREPENTIMIENTOS</button>
       <button class="admin-nav-btn" id="adminFab" aria-label="Panel administrador" onclick="toggleAdminPanel()" title="Panel administrador">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </button>
@@ -783,10 +874,14 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
       <div class="hero-tag">⚡ TECNOLOGÍA NUEVA Y USADA</div>
       <h1 class="hero-title">Comprá y vendé tech<br><span>al mejor precio</span></h1>
       <p class="hero-sub">Smartphones · Laptops · Gaming · Audio · Accesorios</p>
+      <div class="hero-cta">
+        <button class="hero-btn primary" onclick="goCatalog()">Ver catálogo</button>
+        <button class="hero-btn" onclick="sellDevice()">Vendé tu equipo</button>
+      </div>
       <div class="hero-stats">
         <div class="hero-stat"><span id="statProducts">0</span><label>Productos</label></div>
         <div class="hero-divider"></div>
-        <div class="hero-stat"><span>100%</span><label>Seguro</label></div>
+        <div class="hero-stat"><span id="statCats">0</span><label>Categorías</label></div>
         <div class="hero-divider"></div>
         <div class="hero-stat"><span>WhatsApp</span><label>Consultas</label></div>
       </div>
@@ -799,6 +894,13 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
       </div>
 
     </div>
+  </div>
+
+  <div class="trust-strip" id="trustStrip" aria-label="Información de compra">
+    <div class="trust-item"><span class="trust-ico">💬</span><div><b>Atención directa</b><small>Consultá por WhatsApp antes de comprar</small></div></div>
+    <div class="trust-item"><span class="trust-ico">🛡️</span><div><b>Garantía legal</b><small>6 meses en nuevos y 3 en usados</small></div></div>
+    <div class="trust-item"><span class="trust-ico">🧾</span><div><b>Sin pagos en el sitio</b><small>El pago se coordina por WhatsApp</small></div></div>
+    <a class="trust-item trust-arrep" href="#/arrepentimiento"><span class="trust-ico">↩️</span><div><b>Botón de arrepentimiento</b><small>Revocá tu compra en 10 días corridos</small></div></a>
   </div>
 
   <!-- HOME -->
@@ -821,6 +923,9 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
         <option value="200000-500000">$200k — $500k</option>
         <option value="500000-9999999">MÁS DE $500.000</option>
       </select>
+      <select class="filter-select" onchange="filterProducts()" id="brandFilter" style="display:none" aria-label="Filtrar por marca"><option value="all">TODAS LAS MARCAS</option></select>
+      <label class="filter-check"><input type="checkbox" id="availFilter" onchange="filterProducts()"> SOLO DISPONIBLES</label>
+      <button class="filter-clear" id="clearFiltersBtn" onclick="clearFilters()" style="display:none">✕ LIMPIAR FILTROS</button>
       <div class="results-count" id="resultsCount"></div>
       <button class="btn-nuevo-prod admin-controls" style="display:none;" onclick="openModal()">+ NUEVO PRODUCTO</button>
       <button class="btn-nuevo-prod btn-select-mode admin-controls" id="btnSelectMode" style="display:none;" onclick="toggleSelectMode()">☑ SELECCIONAR VARIOS</button>
@@ -834,6 +939,9 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
     <button class="back-btn" onclick="showHome()">← VOLVER AL LISTADO</button>
     <div class="detail-card" id="detailContent"></div>
   </div>
+
+  <!-- LEGAL -->
+  <div class="legal-view" id="legalView"><div class="legal-wrap" id="legalContent"></div></div>
 
   <!-- CART -->
   <div class="cart-view" id="cartView">
@@ -940,6 +1048,18 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, select:foc
       <label>Descripción</label>
       <textarea id="f-desc" placeholder="Describí el producto, estado, accesorios incluidos..."></textarea>
     </div>
+    <div class="form-field">
+      <label>Ficha técnica (una característica por línea: «Clave: valor»)</label>
+      <textarea id="f-specs" rows="4" placeholder="Pantalla: 15.6&quot; FHD&#10;Memoria: 16 GB&#10;Almacenamiento: 512 GB SSD"></textarea>
+    </div>
+    <div class="form-field">
+      <label>Garantía y condiciones</label>
+      <textarea id="f-warranty" rows="2" placeholder="Ej: Garantía de 12 meses por defectos de fábrica."></textarea>
+    </div>
+    <div class="form-field">
+      <label>Marca (opcional)</label>
+      <input type="text" id="f-brand" maxlength="40" placeholder="Ej: JBL" />
+    </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">CANCELAR</button>
       <button class="btn-save" onclick="saveProduct()">GUARDAR PRODUCTO</button>
@@ -1019,6 +1139,16 @@ Parlante JBL Flip 6|audio|new|185000|220000|2|Ariel Diego Díaz|si|6|Parlante Bl
       <div class="bulk-preview" id="bulkPreview"></div>
     </div>
   </div>
+
+<!-- SOLICITUDES DE ARREPENTIMIENTO (admin) -->
+<div id="revocView" style="display:none;">
+  <div class="bulk-view">
+    <div class="bulk-header">SOLICITUDES DE <span>ARREPENTIMIENTO</span></div>
+    <p class="bulk-sub">Cada solicitud llega con su código. Tenés que contactar al cliente para coordinar la devolución; los gastos de devolución son por cuenta del vendedor. Cambiá el estado a medida que la gestionás.</p>
+    <div class="bulk-status" id="revocStatus"></div>
+    <div id="revocList"></div>
+  </div>
+</div>
 
 <!-- LISTA DE PROVEEDOR -->
 <div id="supplierView" style="display:none;">
@@ -1147,6 +1277,16 @@ const CHECKOUT = {
   ],
   maxEncodedLength: 2200   // largo máximo del texto codificado en el link de WhatsApp
 };
+// ── DATOS LEGALES DEL VENDEDOR: completalos (la ley exige mostrar nombre, domicilio y CUIT) ──
+const LEGAL = {
+  titular:   'Ariel Diego Diaz (abacosdigitales)',   // Nombre y apellido o razón social
+  cuit:      '20-23281427-7',                         // CUIT
+  domicilio: 'Greca 376 Bis - 2000 Rosario, Santa Fe, Argentina',   // Domicilio legal
+  email:     'abacosdigitales@gmail.com',             // Correo de atención al cliente
+  horarios:  'Lunes a viernes de 9 a 18 h y sábados de 9 a 13 h',    // Opcional
+  garantiaExtra: 'Los productos que la incluyen conservan la garantía de fábrica de su fabricante, según las condiciones de cada marca. No ofrecemos otra garantía adicional.', // Opcional: garantía MAYOR a la legal
+  actualizado: '16/10/2026'
+};
 const CART_KEY = 'soldit_cart_v1';
 const CHECKOUT_PREFS_KEY = 'soldit_checkout_v1';
 // ─────────────────────────────────────────────────────────
@@ -1183,9 +1323,13 @@ let checkoutState = loadCheckoutPrefs();
 let checkoutSent  = null;   // { code, url } tras enviar el pedido
 let currentCat = 'all';
 let nextId     = 1;
+let lastGenId  = 0;
+// ID único y creciente basado en la hora: dos personas o pestañas cargando a la vez no se pisan
+function genId() { lastGenId = Math.max(Date.now(), lastGenId + 1); return lastGenId; }
 let editingId  = null;
 let deletingId = null;
 let dataLoaded = false;
+let loadFailed = false;
 let routed = false;
 let detailImages = [];
 let selectMode = false;
@@ -1296,6 +1440,7 @@ async function loadData() {
       nextId = 1;
     }
     dataLoaded = true;
+    loadFailed = false;
     syncCartWithCatalog(true);   // el carrito guardado se actualiza con el catálogo actual
     filterProducts();
     applyAdminUI();
@@ -1304,12 +1449,18 @@ async function loadData() {
     console.error('Error cargando productos:', e);
     showToast('⚠ ERROR AL CARGAR PRODUCTOS');
     dataLoaded = true;
-    const g = document.getElementById('productsGrid'), em = document.getElementById('emptyState');
-    if (g) g.innerHTML = '';
-    if (em) {
-      em.innerHTML = '<div class="empty-icon">⚠️</div><div class="empty-title">NO PUDIMOS CARGAR EL CATÁLOGO</div><div class="empty-sub">Revisá tu conexión e intentá de nuevo.</div><button class="btn-save" style="margin-top:14px" onclick="loadData()">REINTENTAR</button>';
-      em.style.display = 'flex';
-    }
+    if (!routed && /^#\/(legal|arrepentimiento)/.test(location.hash)) { routed = true; route(); }
+    loadFailed = true;
+    showLoadError();
+  }
+}
+
+function showLoadError() {
+  const g = document.getElementById('productsGrid'), em = document.getElementById('emptyState');
+  if (g) g.innerHTML = '';
+  if (em) {
+    em.innerHTML = '<div class="empty-icon">⚠️</div><div class="empty-title">NO PUDIMOS CARGAR EL CATÁLOGO</div><div class="empty-sub">Revisá tu conexión e intentá de nuevo.</div><button class="btn-save" style="margin-top:14px" onclick="loadData()">REINTENTAR</button>';
+    em.style.display = 'flex';
   }
 }
 
@@ -1426,6 +1577,9 @@ function openModal(id = null) {
     document.getElementById('f-envio').value      = p.shipping ? '1' : '0';
     document.getElementById('f-vendedor').value   = p.seller;
     document.getElementById('f-desc').value       = p.desc !== '—' ? p.desc : '';
+    document.getElementById('f-specs').value      = (p.specs || []).map(s => s.v ? s.k + ': ' + s.v : s.k).join('\n');
+    document.getElementById('f-warranty').value   = p.warranty || '';
+    document.getElementById('f-brand').value      = p.brand || '';
     document.getElementById('f-imagen').value     = p.imagen || '';
     // Show existing image in upload area
     if (p.imagen) {
@@ -1459,7 +1613,7 @@ function closeModalOutside(e) {
   if (e.target.id === 'modalOverlay') closeModal();
 }
 function clearForm() {
-  ['f-nombre','f-precio','f-precioOrig','f-vendedor','f-desc','f-imagen'].forEach(id => {
+  ['f-nombre','f-precio','f-precioOrig','f-vendedor','f-desc','f-imagen','f-specs','f-warranty','f-brand'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('f-cat').value    = 'smartphone';
@@ -1479,6 +1633,9 @@ function saveProduct() {
   const envio    = document.getElementById('f-envio').value === '1';
   const vendedor = document.getElementById('f-vendedor').value.trim();
   const desc     = document.getElementById('f-desc').value.trim();
+  const specs    = parseSpecLines(document.getElementById('f-specs').value);
+  const warranty = document.getElementById('f-warranty').value.trim().slice(0, 600);
+  const brand    = document.getElementById('f-brand').value.trim().slice(0, 40);
   const imagen   = document.getElementById('f-imagen').value.trim();
   const stockRaw = document.getElementById('f-stock').value;
   const prevProd = editingId ? products.find(x => x.id === editingId) : null;
@@ -1495,7 +1652,8 @@ function saveProduct() {
     origPrice: (precioO && precioO > precio) ? precioO : null,
     cuotas, seller: vendedor, shipping: envio,
     stock, sold: false,
-    desc: desc || '—', features: {}, rating: null, reviews: 0
+    desc: desc || '—', features: {}, rating: null, reviews: 0,
+    specs, warranty, brand
   };
   if (editingId) {
     const idx = products.findIndex(x => x.id===editingId);
@@ -1505,7 +1663,7 @@ function saveProduct() {
     saveProductToFirestore(products[idx]);
     showToast('✔ PRODUCTO ACTUALIZADO');
   } else {
-    const newProduct = {id: nextId++, ...data};
+    const newProduct = {id: genId(), ...data};
     products.push(newProduct);
     saveProductToFirestore(newProduct);
     showToast('✔ PRODUCTO AGREGADO');
@@ -1581,11 +1739,16 @@ function filterProducts() {
 
   // Guard: if filters don't exist, don't run
   if (!searchEl || !condEl || !sortEl || !prEl) return;
+  if (loadFailed && !products.length) { showLoadError(); return; }   // el error de carga no se pisa con "catálogo vacío"
+  syncBrandFilter();
+  const brandEl = document.getElementById('brandFilter'), availEl = document.getElementById('availFilter');
 
   const search = norm(searchEl.value.trim());
   const cond   = condEl.value;
   const sort   = sortEl.value;
   const pr     = prEl.value;
+  const brand  = brandEl ? brandEl.value : 'all';
+  const onlyAvail = !!(availEl && availEl.checked);
 
   let list = products.filter(p => {
     if (isHidden(p) && !isAdmin()) return false;   // oculto por el admin o fuera de la lista del proveedor
@@ -1594,7 +1757,9 @@ function filterProducts() {
     const mCond = cond === 'all' || p.cond === cond;
     let mPrice  = true;
     if (pr !== 'all') { const [mn,mx] = pr.split('-').map(Number); mPrice = p.price>=mn && p.price<=mx; }
-    return mCat && mSrch && mCond && mPrice;
+    const mBrand = brand === 'all' || brandOf(p) === brand;
+    const mAvail = !onlyAvail || (!p.sold && p.stock !== 0 && !isHidden(p));
+    return mCat && mSrch && mCond && mPrice && mBrand && mAvail;
   });
 
   if (sort === 'price-asc')  list.sort((a,b) => a.price-b.price);
@@ -1607,6 +1772,10 @@ function filterProducts() {
   // Update hero stat
   const statEl = document.getElementById('statProducts');
   if (statEl) statEl.textContent = products.filter(p => !p.sold && !isHidden(p)).length;
+  const catEl = document.getElementById('statCats');
+  if (catEl) catEl.textContent = new Set(products.filter(p => !p.sold && !isHidden(p)).map(p => p.cat)).size;
+  const filtersActive = !!search || cond !== 'all' || sort !== 'relevance' || pr !== 'all' || brand !== 'all' || onlyAvail || currentCat !== 'all';
+  const clr = document.getElementById('clearFiltersBtn'); if (clr) clr.style.display = filtersActive ? 'inline-block' : 'none';
 
   if (list.length === 0) {
     grid.innerHTML = '';
@@ -1997,7 +2166,8 @@ function renderCart() {
         <textarea class="co-input" id="coNotes" rows="2" maxlength="300" placeholder="Algo que quieras aclarar" oninput="coSet('notes', this.value)">${esc(st.notes)}</textarea>
       </div>
       <button class="btn-checkout" onclick="sendOrderWhatsApp()">${waIcon}<span>Enviar pedido por WhatsApp</span></button>
-      <div class="co-fine">No se cobra nada en esta página. Te respondemos por WhatsApp para confirmar stock, precio final y cómo pagar.</div>
+      <div class="co-fine">No se cobra nada en esta página. Te respondemos por WhatsApp para confirmar stock, el costo de envío (si corresponde) y cómo pagar.</div>
+      <div class="co-fine co-legal">Podés revocar tu compra dentro de los 10 días corridos de recibirla. <a href="#/arrepentimiento">Botón de arrepentimiento</a> · <a href="#/legal/garantia">Garantía y cambios</a> · <a href="#/legal/terminos">Términos</a></div>
     </div>`;
   if (focusName && /^co(Pay|Del)$/.test(focusName)) {   // al re-renderizar, el teclado conserva el foco
     const again = summDiv.querySelector(`input[name="${focusName}"][value="${focusVal}"]`);
@@ -2119,6 +2289,8 @@ function applyAdminUI() {
     fab.classList.toggle('active', admin);
     fab.title = admin ? 'Cerrar sesión admin' : 'Panel administrador';
   });
+  const lv = document.getElementById('legalView');
+  if (lv && lv.style.display === 'block' && currentLegalPage && currentLegalPage !== 'arrepentimiento') renderLegalPage(currentLegalPage);
   // Re-render para mostrar/ocultar botones de admin (solo si ya cargó el catálogo)
   const homeView = document.getElementById('homeView');
   if (dataLoaded && homeView && homeView.style.display !== 'none') filterProducts();
@@ -2212,7 +2384,7 @@ const catEmojisMap = { smartphone:'📱', laptop:'💻', gaming:'🎮', audio:'�
 function showBulkView() {
   if (selectMode) exitSelectMode();
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
-  ['homeView','detailView','cartView','supplierView'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['homeView','detailView','cartView','supplierView','legalView','revocView'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('bulkView').style.display = 'block';
   const hb = document.getElementById('heroBanner'); if(hb) hb.style.display='none';
 }
@@ -2237,7 +2409,7 @@ function parseBulk() {
       errors.push('Línea '+(i+2)+': categoría "'+cat+'" no válida'); return;
     }
     bulkProducts.push({
-      id: nextId + bulkProducts.length,
+      id: genId(),
       name: nombre, cat: cat || 'accesorio',
       emoji: catEmojisMap[cat] || '📦',
       cond: cond === 'used' ? 'used' : 'new',
@@ -2439,7 +2611,7 @@ let supParsed = null, supPlan = null;
 function showSupplierView() {
   if (selectMode) exitSelectMode();
   if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
-  ['homeView', 'detailView', 'cartView', 'bulkView'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['homeView', 'detailView', 'cartView', 'bulkView', 'legalView', 'revocView'].forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('supplierView').style.display = 'block';
   const hb = document.getElementById('heroBanner'); if (hb) hb.style.display = 'none';
   window.scrollTo(0, 0);
@@ -2580,14 +2752,13 @@ async function applySupplier() {
     setSupStatus('⚠ NO SE PUDO GUARDAR LA CONFIGURACIÓN — ACTUALIZÁ LAS REGLAS DE FIRESTORE (config y costs)', 'error');
     btn.disabled = false; return;
   }
-  let idc = nextId;
   const units = [];
   rows.forEach(r => {
     const g = supParsed.groups[r.gi];
     const cost = { key: r.it.key, group: g.key, costUsd: r.it.costUsd, updatedAt: Date.now() };
     if (!r.ex) {
       units.push({ cost, prod: {
-        id: idc++, name: r.it.name, cat: g.cat, cond: 'new', emoji: catEmojisMap[g.cat] || '📦',
+        id: genId(), name: r.it.name, cat: g.cat, cond: 'new', emoji: catEmojisMap[g.cat] || '📦',
         imagen: null, price: r.price, origPrice: null, cuotas: null, seller: 'Sold-It TechMarket',
         shipping: false, stock: null, sold: false, desc: '—', features: {}, rating: null, reviews: 0,
         supplierKey: r.it.key, supplierGroup: g.key, hot: r.it.hot, available: true
@@ -2941,6 +3112,247 @@ async function confirmBulkDelete() {
   }
 }
 
+/* ── MARCAS Y FILTROS ── */
+const BRAND_LIST = ['JBL','ASUS','HP','Acer','Lenovo','Dell','Samsung','Apple','MSI','Microsoft','Noblex','Xiaomi','Motorola','Sony','LG','Logitech','HyperX','Razer','Corsair','Kingston','SanDisk','GoPro','DJI','Canon','Epson','Huawei','Realme','Nintendo','Oppo','TCL','Philips','Bose','Anker','Baseus','Redragon','Gigabyte','Genius','Google','Amazon','Garmin','Seagate','Brother','Nikon','Marshall','Netgear','Hikvision','Philco','BGH','Kodak'];
+const BRAND_LOOKUP = {};
+BRAND_LIST.forEach(b => { BRAND_LOOKUP[norm(b).replace(/[^a-z0-9]/g, '')] = b; });
+const BRAND_ALIASES = { imac:'Apple', macbook:'Apple', iphone:'Apple', ipad:'Apple', airpods:'Apple', galaxy:'Samsung', redmi:'Xiaomi', moto:'Motorola', playstation:'Sony', ps5:'Sony', ps4:'Sony', xbox:'Microsoft', surface:'Microsoft', kindle:'Amazon' };
+function brandOf(p) {
+  if (p.brand) return p.brand;
+  const toks = norm(p.name).split(/[^a-z0-9]+/).filter(Boolean);
+  for (const tk of toks) { const b = BRAND_ALIASES[tk] || BRAND_LOOKUP[tk]; if (b) return b; }
+  return null;
+}
+let brandSig = '';
+function syncBrandFilter() {
+  const sel = document.getElementById('brandFilter');
+  if (!sel) return;
+  const counts = {};
+  products.forEach(p => { if (isHidden(p) && !isAdmin()) return; const b = brandOf(p); if (b) counts[b] = (counts[b] || 0) + 1; });
+  const names = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+  const sig = names.map(n => n + counts[n]).join('|');
+  if (sig === brandSig) return;
+  brandSig = sig;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="all">TODAS LAS MARCAS</option>' + names.map(n => '<option value="' + esc(n) + '">' + esc(n.toUpperCase()) + ' (' + counts[n] + ')</option>').join('');
+  sel.value = names.includes(cur) ? cur : 'all';
+  sel.style.display = names.length >= 2 ? '' : 'none';
+}
+function clearFilters() {
+  ['searchInput'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+  set('condFilter', 'all'); set('sortFilter', 'relevance'); set('priceFilter', 'all'); set('brandFilter', 'all');
+  const av = document.getElementById('availFilter'); if (av) av.checked = false;
+  currentCat = 'all';
+  document.querySelectorAll('.cat-pill').forEach(e => e.classList.toggle('active', e.dataset.cat === 'all'));
+  filterProducts();
+}
+function parseSpecLines(text) {
+  return String(text || '').split(/\r?\n/).map(l => l.replace(/^[-•*]\s*/, '').trim()).filter(Boolean).slice(0, 60).map(l => {
+    const i = l.indexOf(':');
+    return i > 0 ? { k: l.slice(0, i).trim().slice(0, 60), v: l.slice(i + 1).trim().slice(0, 200) } : { k: l.slice(0, 120), v: '' };
+  });
+}
+
+/* ── INICIO: ver catálogo y vender un equipo ── */
+function goCatalog() {
+  const el = document.querySelector('.filters-row');
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function sellDevice() {
+  const msg = 'Hola! Quiero vender mi equipo en ' + CHECKOUT.storeName + '.\n\n*Equipo y modelo:* \n*Estado (y accesorios):* \n*Precio que pienso:* \n\n(Te envío fotos por acá)';
+  window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
+
+/* ── PÁGINAS LEGALES + BOTÓN DE ARREPENTIMIENTO ──
+   Base normativa: Ley 24.240 (arts. 8, 9, 10, 11, 34 y 38), Res. 424/2020 (botón de arrepentimiento)
+   y Ley 25.326 (leyendas de protección de datos). Texto modelo: revisalo con un abogado. */
+let currentLegalPage = null;
+
+function waPretty() {
+  const n = String(WA_NUMBER);
+  return /^549\d{10}$/.test(n) ? '+54 9 ' + n.slice(3, 5) + ' ' + n.slice(5, 9) + '-' + n.slice(9) : '+' + n;
+}
+function legalIdBlock() {
+  const rows = [['Titular', LEGAL.titular], ['CUIT', LEGAL.cuit], ['Domicilio legal', LEGAL.domicilio], ['Email', LEGAL.email], ['WhatsApp', waPretty()], ['Horario de atención', LEGAL.horarios]].filter(r => r[1]);
+  return '<dl class="legal-id">' + rows.map(r => '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>').join('') + '</dl>';
+}
+function legalAdminBanner() {
+  if (!isAdmin()) return '';
+  const miss = [['titular', 'nombre o razón social'], ['cuit', 'CUIT'], ['domicilio', 'domicilio legal'], ['email', 'email de contacto']].filter(x => !LEGAL[x[0]]).map(x => x[1]);
+  return '<div class="legal-admin"><b>Solo lo ves vos (admin).</b> ' +
+    (miss.length ? 'Faltan datos del vendedor en el bloque <code>LEGAL</code> del código: <b>' + esc(miss.join(', ')) + '</b>. La ley exige mostrar nombre, domicilio y CUIT. ' : 'Datos del vendedor completos. ') +
+    'Estos textos son un modelo basado en la Ley 24.240 y la Res. 424/2020: revisalos con un abogado antes de darlos por definitivos.</div>';
+}
+const lg = (title, body) => '<section class="legal-sec"><h2>' + title + '</h2>' + body + '</section>';
+const LEGEND_ACCESS = 'El titular de los datos personales tiene la facultad de ejercer el derecho de acceso a los mismos en forma gratuita a intervalos no inferiores a seis meses, salvo que se acredite un interés legítimo al efecto conforme lo establecido en el artículo 14, inciso 3 de la Ley Nº 25.326.';
+const LEGEND_AAIP = 'La AGENCIA DE ACCESO A LA INFORMACIÓN PÚBLICA, en su carácter de Órgano de Control de la Ley Nº 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.';
+
+function legalTerms() {
+  return '<p class="legal-lead">Estas condiciones regulan el uso del sitio <b>' + esc(CHECKOUT.storeName) + '</b> y las compras que se coordinan a través de él. Al enviar un pedido las aceptás.</p>' +
+    lg('1. Quién vende', legalIdBlock()) +
+    lg('2. Qué ofrece el sitio', '<p>Un catálogo de tecnología nueva y usada. Los productos usados se identifican con la etiqueta <b>USADO</b>, y su estado y accesorios se informan en la descripción de cada producto. Si algún dato no te queda claro, consultanos por WhatsApp antes de comprar.</p>') +
+    lg('3. Cómo se compra', '<ol><li>Elegís los productos y armás tu carrito.</li><li>Completás tu nombre y elegís cómo querés pagar y recibir tu pedido.</li><li>Se abre WhatsApp con tu pedido armado y nos lo enviás.</li><li>Confirmamos la disponibilidad (stock), el costo de envío —si elegiste envío— y cómo pagar. Si algún producto ya no está disponible, te lo informamos y podés elegir otro o cancelar sin costo.</li></ol><p>La compra se concreta cuando acordamos el pago y la entrega por WhatsApp. <b>El sitio no cobra ni procesa pagos.</b></p>') +
+    lg('4. Precios y medios de pago', '<p>Los precios están expresados en pesos argentinos. El costo de envío, cuando corresponde, se informa antes de que confirmes la compra. Los medios de pago son los que figuran en el formulario del pedido (transferencia bancaria, efectivo, Mercado Pago / tarjeta u otro medio a coordinar). Si hay cuotas o financiación, te informamos sus condiciones antes de pagar.</p>') +
+    lg('5. Entrega', '<p>Podés elegir retiro o envío. Los plazos, costos y condiciones de entrega se acuerdan y confirman por WhatsApp antes de pagar.</p>') +
+    lg('6. Garantía', '<p>Todos los productos tienen la garantía legal prevista en la Ley de Defensa del Consumidor. Conocé el detalle en <a href="#/legal/garantia">Garantía y cambios</a>.</p>') +
+    lg('7. Derecho de revocación (arrepentimiento)', '<p>En las compras a distancia podés <b>revocar la aceptación dentro de los 10 días corridos</b> contados desde que recibís el producto o se celebra el contrato (lo último que ocurra), sin responsabilidad alguna. Ese derecho no puede ser dispensado ni renunciado. Para ejercerlo usá el <a href="#/arrepentimiento"><b>Botón de arrepentimiento</b></a>.</p>') +
+    lg('8. Datos personales', '<p>Cómo tratamos tus datos está explicado en la <a href="#/legal/privacidad">Política de privacidad</a>.</p>') +
+    lg('9. Reclamos', '<p>Podés hacernos llegar cualquier reclamo por WhatsApp' + (LEGAL.email ? ' o a <b>' + esc(LEGAL.email) + '</b>' : '') + '. También podés acudir a la oficina de Defensa del Consumidor de tu jurisdicción.</p>') +
+    lg('10. Cambios en estas condiciones', '<p>Podemos actualizar estas condiciones. Rige la versión publicada al momento de tu pedido.</p>') +
+    lg('11. Ley aplicable', '<p>Se aplican las leyes de la República Argentina, en especial la Ley 24.240 de Defensa del Consumidor.</p>');
+}
+function legalPrivacy() {
+  return '<p class="legal-lead">Esta política explica qué datos tratamos cuando usás <b>' + esc(CHECKOUT.storeName) + '</b>, para qué los usamos y qué derechos tenés.</p>' +
+    lg('Responsable', legalIdBlock()) +
+    lg('Qué datos tratamos', '<ul><li><b>Tu pedido por WhatsApp:</b> tu nombre y lo que incluyas en el mensaje. WhatsApp (Meta) procesa esos mensajes según sus propias políticas.</li><li><b>Solicitud de arrepentimiento:</b> nombre y apellido, email, teléfono (opcional), código de pedido, producto, fecha de recepción y comentarios. Se guardan en una base de datos de Google Firebase.</li><li><b>En tu dispositivo:</b> el carrito y tus preferencias de pedido (nombre, medio de pago, entrega y zona) se guardan en el almacenamiento local de tu navegador para que no los pierdas. No se envían a ningún servidor y podés borrarlos limpiando los datos del sitio.</li><li><b>Servicios técnicos de terceros:</b> el sitio carga tipografías de Google Fonts, el catálogo desde Google Firebase y las imágenes desde Cloudinary. Estos proveedores pueden recibir datos técnicos como tu dirección IP.</li></ul><p>El sitio no usa cookies publicitarias ni de seguimiento propias.</p>') +
+    lg('Para qué los usamos', '<p>Para atender tus consultas, gestionar tus pedidos y reclamos, y cumplir obligaciones legales, como tramitar las solicitudes de arrepentimiento.</p>') +
+    lg('Con quién los compartimos', '<p>No vendemos tus datos. Solo los compartimos con los proveedores técnicos mencionados arriba y con las autoridades cuando la ley lo exija.</p>') +
+    lg('Cuánto tiempo los conservamos', '<p>El tiempo necesario para gestionar tu consulta, pedido o reclamo y cumplir las obligaciones legales aplicables.</p>') +
+    lg('Tus derechos', '<p>Podés pedir acceso, rectificación, actualización o supresión de tus datos escribiéndonos' + (LEGAL.email ? ' a <b>' + esc(LEGAL.email) + '</b>' : ' por WhatsApp') + '.</p><p>' + esc(LEGEND_ACCESS) + '</p><p>' + esc(LEGEND_AAIP) + '</p>');
+}
+function legalWarranty() {
+  return '<p class="legal-lead">Esto es lo que necesitás saber sobre la garantía de tus productos y cómo cambiar o devolver una compra.</p>' +
+    lg('Garantía legal', '<p>Los bienes muebles no consumibles tienen garantía legal por defectos o vicios de cualquier índole, aunque hayan sido ostensibles o manifiestos al momento del contrato, cuando afecten la identidad entre lo ofrecido y lo entregado o su correcto funcionamiento.</p><p>El plazo es de <b>6 meses desde la entrega para los productos nuevos</b> y de <b>3 meses para los productos usados</b>. Las partes pueden convenir un plazo mayor.</p>' +
+      (LEGAL.garantiaExtra ? '<p><b>Garantía adicional:</b> ' + esc(LEGAL.garantiaExtra) + '</p>' : '')) +
+    lg('Si el producto tiene que repararse', '<p>Cuando el producto deba trasladarse a fábrica o taller habilitado, el transporte lo realiza el responsable de la garantía, y los gastos de flete, seguros y cualquier otro necesario están a su cargo.</p><p>Son solidariamente responsables del cumplimiento de la garantía legal los productores, importadores, distribuidores y vendedores.</p>') +
+    lg('Cómo hacer un reclamo de garantía', '<p>Escribinos por WhatsApp' + (LEGAL.email ? ' o a <b>' + esc(LEGAL.email) + '</b>' : '') + ' indicando tu nombre, el código de tu pedido (por ejemplo <b>SI-1410-AB12</b>) y una descripción del problema. Te indicamos los pasos a seguir.</p>') +
+    lg('Productos usados', '<p>Se ofrecen como usados y su estado se describe en cada producto. La garantía legal rige igualmente, con el plazo indicado arriba.</p>') +
+    lg('Devolver una compra (arrepentimiento)', '<p>Si compraste a distancia, podés revocar la aceptación <b>dentro de los 10 días corridos</b> desde que recibiste el producto o se celebró el contrato (lo último que ocurra), sin responsabilidad. Tenés que poner el producto a disposición del vendedor y <b>los gastos de devolución son por cuenta del vendedor</b>.</p><p><a class="legal-btn" href="#/arrepentimiento">↩ Usar el botón de arrepentimiento</a></p>');
+}
+
+function revocationPageHtml() {
+  return '<p class="legal-lead">Si compraste a distancia, podés <b>revocar la aceptación</b> de tu compra dentro de los <b>10 días corridos</b> contados desde que recibiste el producto o se celebró el contrato (lo último que ocurra), <b>sin responsabilidad alguna</b>. No necesitás registrarte ni hacer ningún otro trámite. Al enviar el formulario te damos un <b>código de arrepentimiento</b> en esta misma pantalla.</p>' +
+    '<div id="revocWrap"><form class="rv-form" id="rvForm" onsubmit="return submitRevocation(event)" novalidate>' +
+    '<div class="rv-row"><div class="rv-field"><label for="rvName">Nombre y apellido *</label><input id="rvName" type="text" maxlength="80" autocomplete="name"></div>' +
+    '<div class="rv-field"><label for="rvEmail">Email *</label><input id="rvEmail" type="email" maxlength="120" autocomplete="email"></div></div>' +
+    '<div class="rv-row"><div class="rv-field"><label for="rvPhone">Teléfono (opcional)</label><input id="rvPhone" type="tel" maxlength="30" autocomplete="tel"></div>' +
+    '<div class="rv-field"><label for="rvOrder">Código de pedido (opcional)</label><input id="rvOrder" type="text" maxlength="40" placeholder="Ej: SI-1410-AB12"></div></div>' +
+    '<div class="rv-field"><label for="rvProduct">Producto o productos que querés devolver *</label><textarea id="rvProduct" rows="2" maxlength="400" placeholder="Nombre del producto"></textarea></div>' +
+    '<div class="rv-row"><div class="rv-field"><label for="rvDate">Fecha en que lo recibiste (opcional)</label><input id="rvDate" type="date"></div>' +
+    '<div class="rv-field"><label for="rvComments">Comentarios (opcional)</label><input id="rvComments" type="text" maxlength="600"></div></div>' +
+    '<div class="rv-hp" aria-hidden="true"><label for="rvWebsite">No completar</label><input id="rvWebsite" type="text" tabindex="-1" autocomplete="off"></div>' +
+    '<div class="rv-error" id="rvError" role="alert"></div>' +
+    '<button class="btn-checkout rv-submit" type="submit" id="rvSubmit"><span>Solicitar arrepentimiento</span></button></form></div>' +
+    lg('Cómo sigue', '<p>Después de tu solicitud nos contactamos para coordinar la devolución. Tenés que poner el producto a disposición del vendedor y <b>los gastos de devolución son por cuenta del vendedor</b>.</p>') +
+    '<div class="legal-fine"><p>' + esc(LEGEND_ACCESS) + '</p><p>' + esc(LEGEND_AAIP) + '</p><p>Más información en la <a href="#/legal/privacidad">Política de privacidad</a>.</p></div>';
+}
+
+const LEGAL_PAGES = {
+  terminos:        { title: 'Términos y condiciones',    html: legalTerms },
+  privacidad:      { title: 'Política de privacidad',     html: legalPrivacy },
+  garantia:        { title: 'Garantía y cambios',         html: legalWarranty },
+  arrepentimiento: { title: 'Botón de arrepentimiento',   html: revocationPageHtml }
+};
+
+function renderLegalPage(page) {
+  const def = LEGAL_PAGES[page];
+  if (!def) return;
+  document.getElementById('legalContent').innerHTML =
+    '<button class="back-btn" onclick="showHome()">← VOLVER AL INICIO</button>' +
+    '<h1 class="legal-title">' + esc(def.title) + '</h1>' +
+    (page === 'arrepentimiento' ? '' : '<div class="legal-updated">Última actualización: ' + esc(LEGAL.actualizado) + '</div>') +
+    legalAdminBanner() + def.html();
+  document.title = def.title + ' — ' + CHECKOUT.storeName;
+}
+function _showLegal(page) {
+  if (selectMode) exitSelectMode();
+  ['homeView', 'detailView', 'cartView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  const hb = document.getElementById('heroBanner'); if (hb) hb.style.display = 'none';
+  document.getElementById('legalView').style.display = 'block';
+  currentLegalPage = page;
+  renderLegalPage(page);
+  window.scrollTo(0, 0);
+}
+function renderFooterLegal() {
+  const el = document.getElementById('footerLegal');
+  if (!el) return;
+  const parts = [LEGAL.titular, LEGAL.cuit ? 'CUIT ' + LEGAL.cuit : '', LEGAL.domicilio, LEGAL.email].filter(Boolean);
+  el.innerHTML = parts.length ? esc(parts.join(' · ')) : '';
+  el.style.display = parts.length ? '' : 'none';
+}
+document.addEventListener('DOMContentLoaded', renderFooterLegal);
+
+// ── Solicitudes de arrepentimiento: registro + constancia ──
+function newRevocationCode() {
+  const d = new Date(), pad = n => String(n).padStart(2, '0');
+  return 'AR-' + pad(d.getDate()) + pad(d.getMonth() + 1) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+}
+function revocationWhatsAppUrl(code, data) {
+  const msg = 'Hola! Quiero ejercer mi derecho de arrepentimiento.\n*Código:* ' + code + '\n*Nombre:* ' + data.name + '\n*Producto:* ' + data.product + (data.order ? '\n*Pedido:* ' + data.order : '');
+  return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+}
+async function submitRevocation(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  const v = id => ((document.getElementById(id) || {}).value || '').trim();
+  const err = document.getElementById('rvError');
+  const data = { name: v('rvName').slice(0, 80), email: v('rvEmail').slice(0, 120), phone: v('rvPhone').slice(0, 30), order: v('rvOrder').slice(0, 40), product: v('rvProduct').slice(0, 400), receivedAt: v('rvDate').slice(0, 20), comments: v('rvComments').slice(0, 600) };
+  if (data.name.length < 2) { err.textContent = 'Ingresá tu nombre y apellido.'; document.getElementById('rvName').focus(); return false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { err.textContent = 'Ingresá un email válido para poder contactarte.'; document.getElementById('rvEmail').focus(); return false; }
+  if (data.product.length < 2) { err.textContent = 'Indicá qué producto querés devolver.'; document.getElementById('rvProduct').focus(); return false; }
+  err.textContent = '';
+  if (v('rvWebsite')) { renderRevocationDone('AR-0000-0000', data, true); return false; }   // anti-spam: un robot completó el campo oculto
+  const btn = document.getElementById('rvSubmit'); btn.disabled = true;
+  const code = newRevocationCode();
+  const doc = { code, ...data, createdAt: Date.now(), status: 'nuevo' };
+  try {
+    await db.collection('revocations').doc(code).set(doc);
+    renderRevocationDone(code, data, false);
+  } catch (e) {
+    console.error('No se pudo registrar el arrepentimiento:', e);
+    btn.disabled = false;
+    err.innerHTML = '<b>No pudimos registrar tu solicitud en este momento.</b> Para no perder el trámite, enviala por WhatsApp (queda registrada ahí)' + (LEGAL.email ? ' o escribinos a ' + esc(LEGAL.email) : '') + ': <a href="' + esc(revocationWhatsAppUrl(code, data)) + '" target="_blank" rel="noopener">enviar por WhatsApp</a>.';
+  }
+  return false;
+}
+function renderRevocationDone(code, data, fake) {
+  const when = new Date().toLocaleString('es-AR');
+  document.getElementById('revocWrap').innerHTML =
+    '<div class="rv-done" role="status"><div class="rv-done-title">✔ Recibimos tu solicitud de arrepentimiento</div>' +
+    '<div class="rv-code-label">Tu código de arrepentimiento</div><div class="rv-code" id="rvCode">' + esc(code) + '</div>' +
+    '<p>Guardá este código: es tu constancia. Fecha y hora: <b>' + esc(when) + '</b>.</p>' +
+    '<ul class="rv-sum"><li><b>Nombre:</b> ' + esc(data.name) + '</li><li><b>Email:</b> ' + esc(data.email) + '</li><li><b>Producto:</b> ' + esc(data.product) + '</li>' + (data.order ? '<li><b>Pedido:</b> ' + esc(data.order) + '</li>' : '') + '</ul>' +
+    '<p>Nos vamos a comunicar con vos para coordinar la devolución. Recordá que los gastos de devolución son por cuenta del vendedor.</p>' +
+    '<div class="rv-actions"><a class="legal-btn" href="' + esc(revocationWhatsAppUrl(code, data)) + '" target="_blank" rel="noopener">Enviar por WhatsApp para agilizar</a><button class="back-btn" style="margin:0" onclick="showHome()">Volver al inicio</button></div></div>';
+}
+
+// ── Admin: ver y gestionar las solicitudes ──
+function showRevocView() {
+  if (!isAdmin()) { showToast('🔒 INICIÁ SESIÓN COMO ADMIN'); return; }
+  if (selectMode) exitSelectMode();
+  ['homeView', 'detailView', 'cartView', 'bulkView', 'supplierView', 'legalView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  const hb = document.getElementById('heroBanner'); if (hb) hb.style.display = 'none';
+  document.getElementById('revocView').style.display = 'block';
+  window.scrollTo(0, 0);
+  loadRevocations();
+}
+async function loadRevocations() {
+  const st = document.getElementById('revocStatus'), list = document.getElementById('revocList');
+  st.className = 'bulk-status loading'; st.textContent = '⏳ CARGANDO SOLICITUDES...';
+  try {
+    const snap = await db.collection('revocations').orderBy('createdAt', 'desc').limit(200).get();
+    const rows = [];
+    snap.forEach(d => rows.push(d.data()));
+    st.className = 'bulk-status'; st.textContent = '';
+    if (!rows.length) { list.innerHTML = '<div class="cart-empty" style="padding:30px 0">Todavía no hay solicitudes.</div>'; return; }
+    const opt = (cur, v, label) => '<option value="' + v + '"' + (cur === v ? ' selected' : '') + '>' + label + '</option>';
+    list.innerHTML = '<table class="bulk-table"><thead><tr><th>Código</th><th>Fecha</th><th>Cliente</th><th>Producto / pedido</th><th>Estado</th></tr></thead><tbody>' + rows.map(r => {
+      const wa = r.phone && String(r.phone).replace(/\D/g, '').length >= 8 ? ' · <a href="https://wa.me/' + esc(String(r.phone).replace(/\D/g, '')) + '" target="_blank" rel="noopener">WhatsApp</a>' : '';
+      return '<tr><td><b>' + esc(r.code) + '</b></td><td>' + esc(new Date(r.createdAt).toLocaleString('es-AR')) + '</td><td>' + esc(r.name) + '<br><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' + wa + (r.phone ? '<br>' + esc(r.phone) : '') + '</td><td>' + esc(r.product) + (r.order ? '<br>Pedido: ' + esc(r.order) : '') + (r.receivedAt ? '<br>Recibido: ' + esc(r.receivedAt) : '') + (r.comments ? '<br><i>' + esc(r.comments) + '</i>' : '') + '</td>' +
+        '<td><select class="filter-select" data-code="' + esc(r.code) + '" onchange="updateRevocationStatus(this.dataset.code, this.value)">' + opt(r.status, 'nuevo', 'NUEVO') + opt(r.status, 'en_gestion', 'EN GESTIÓN') + opt(r.status, 'resuelto', 'RESUELTO') + '</select></td></tr>';
+    }).join('') + '</tbody></table>';
+  } catch (e) {
+    console.error(e);
+    st.className = 'bulk-status error';
+    st.textContent = '⚠ NO SE PUDIERON LEER LAS SOLICITUDES — REVISÁ LAS REGLAS DE FIRESTORE (revocations)';
+  }
+}
+async function updateRevocationStatus(code, status) {
+  if (!isAdmin()) return;
+  try { await db.collection('revocations').doc(code).update({ status }); showToast('✔ ESTADO ACTUALIZADO'); }
+  catch (e) { console.error(e); showToast('⚠ NO SE PUDO ACTUALIZAR'); loadRevocations(); }
+}
+
 /* ── RUTEO POR HASH: #/producto/12 · #/carrito · #/ ── */
 function go(hash) {
   if ((location.hash || '#/') === hash) route();   // mismo hash: no hay evento, renderizamos directo
@@ -2952,7 +3364,7 @@ function showDetail(id) { go('#/producto/' + id); }
 
 function route() {
   if (!dataLoaded) return;                          // se vuelve a llamar al terminar loadData()
-  ['bulkView', 'supplierView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  ['bulkView', 'supplierView', 'legalView', 'revocView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
   const h = location.hash || '#/';
   const m = h.match(/^#(?:\/producto\/|producto-)(\d+)$/);
   if (m) {
@@ -2963,6 +3375,9 @@ function route() {
     _showHome();
     return;
   }
+  const lm = h.match(/^#\/legal\/(terminos|privacidad|garantia)$/);
+  if (lm) { _showLegal(lm[1]); return; }
+  if (h === '#/arrepentimiento') { _showLegal('arrepentimiento'); return; }
   if (h === '#/carrito') { _showCart(); return; }
   _showHome();
 }
@@ -2997,7 +3412,7 @@ loadData();
     <div class="footer-brand">
       <div class="footer-logo">Sold<span>-It</span></div>
       <div class="footer-tagline">TechMarket — Tecnología para todos</div>
-      <div class="footer-desc">Compra y vende tecnología nueva y usada de forma segura, rápida y con consulta directa al vendedor.</div>
+      <div class="footer-desc">Comprá y vendé tecnología nueva y usada, con atención directa por WhatsApp.</div>
     </div>
     <div class="footer-links">
       <div class="footer-col">
@@ -3017,11 +3432,20 @@ loadData();
         </a>
         <div class="footer-col-title" style="margin-top:12px">Información</div>
         <div>Productos nuevos y usados</div>
-        <div>Envíos a todo el país</div>
-        <div>Pago por transferencia</div>
+        <div>Pedidos y consultas por WhatsApp</div>
+        <div>Retiro o envío a coordinar</div>
+        <div role="button" tabindex="0" onclick="sellDevice()">Vendé tu equipo</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Legales</div>
+        <a href="#/legal/terminos">Términos y condiciones</a>
+        <a href="#/legal/privacidad">Política de privacidad</a>
+        <a href="#/legal/garantia">Garantía y cambios</a>
+        <a href="#/arrepentimiento" class="footer-arrep">↩ Botón de arrepentimiento</a>
       </div>
     </div>
   </div>
+  <div class="footer-legal" id="footerLegal"></div>
   <div class="footer-bottom">
     <span>© 2026 Sold-It TechMarket — Todos los derechos reservados</span>
     <span class="footer-badge">Hecho con ❤ en Argentina 🇦🇷</span>
