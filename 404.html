@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sold-It TechMarket</title>
+<meta name="robots" content="noindex">
+<style>body{margin:0;background:#080810;color:#ececf4;font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center}a{color:#f5c400}</style>
+</head>
+<body>
+<main><p>Te llevamos al sitio…</p><p><a id="go" href="./">Ir a Sold-It TechMarket</a></p></main>
+<script>
+// Si alguien abre un link de producto cuya página ya no existe (p. ej. el producto se ocultó),
+// lo llevamos al sitio: ahí se le avisa si el producto ya no está disponible.
+(function () {
+  var parts = location.pathname.split('/');
+  var base = '/' + (parts[1] || '') + '/';
+  var m = location.pathname.match(/\/p\/(\d+)\.html$/);
+  var dest = base + (m ? '#/producto/' + m[1] : '');
+  document.getElementById('go').href = dest;
+  location.replace(dest);
+})();
+</script>
+</body>
+</html>

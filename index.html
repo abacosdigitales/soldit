@@ -1475,8 +1475,22 @@ function showLoadingState() {
 }
 
 /* ── URLs COMPARTIBLES ── */
+// Páginas por producto (p/<id>.html) que genera la automatización de GitHub: sirven para que
+// WhatsApp, Facebook, etc. muestren la foto y el precio. Si todavía no existe, se usa el link normal.
+let sharePages = new Set();
+function pageBaseUrl() { return location.origin + location.pathname.replace(/[^/]*$/, ''); }
 function getProductUrl(id) {
-  return location.origin + location.pathname + '#/producto/' + id;
+  const base = pageBaseUrl();
+  return sharePages.has(id) ? base + 'p/' + id + '.html' : base + '#/producto/' + id;
+}
+async function loadSharePages() {
+  try {
+    if (typeof fetch !== 'function') return;
+    const r = await fetch('p/index.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j && Array.isArray(j.ids)) sharePages = new Set(j.ids.filter(Number.isInteger));
+  } catch (e) { /* todavía no hay páginas para compartir: se usan los links normales */ }
 }
 function updateMetaTags(p) {
   const title = p ? `${p.name} — $${p.price.toLocaleString('es-AR')} | Sold-It TechMarket` : 'Sold-It TechMarket — Tecnología nueva y usada';
@@ -1497,6 +1511,7 @@ async function compartirProducto(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   const url = getProductUrl(id);
+  const pending = sharePages.size > 0 && !sharePages.has(id);   // producto nuevo: la foto del link aparece en unos minutos
   const text = `Mirá este producto en Sold-It TechMarket: *${p.name}* — $${p.price.toLocaleString('es-AR')}`;
   if (navigator.share) {
     try { await navigator.share({ title: p.name, text, url }); return; }
@@ -1504,7 +1519,7 @@ async function compartirProducto(id) {
   }
   try {
     await navigator.clipboard.writeText(text + '\n' + url);
-    showToast('🔗 LINK COPIADO AL PORTAPAPELES');
+    showToast(pending ? '🔗 LINK COPIADO — LA FOTO EN LA VISTA PREVIA APARECE EN UNOS MINUTOS' : '🔗 LINK COPIADO AL PORTAPAPELES');
   } catch (e) {
     window.prompt('Copiá este link:', url);
   }
@@ -3397,6 +3412,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
+loadSharePages();
 loadData();
 </script>
 
